@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>مملكة النحل التفاعلية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <style>
+    html, body { margin: 0; min-height: 100%; background: #fff7d6; }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif; }
+    #root { min-height: 100vh; }
+    @supports (height: 100dvh) { #root { min-height: 100dvh; } }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Tahoma,Arial;background:#fff7d6;color:#92400e;padding:24px;">
+      <div>
+        <div style="font-size:48px;">🐝</div>
+        <h1>جاري تحميل لعبة مملكة النحل...</h1>
+        <p>إذا لم تعمل اللعبة، تأكدي من اتصال الجهاز بالإنترنت أول مرة لتحميل React و Tailwind.</p>
+      </div>
+    </div>
+  </div>
+  <script>
+  (() => {
+  var __defProp = Object.defineProperty;
+  var __defProps = Object.defineProperties;
+  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __spreadValues = (a, b) => {
+    for (var prop in b || (b = {}))
+      if (__hasOwnProp.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop))
+          __defNormalProp(a, prop, b[prop]);
+      }
+    return a;
+  };
+  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
+  const { useState, useMemo, useEffect, useRef } = React;
+  const styleTag = `
+@keyframes flapLeft {
+  0%, 100% { transform: rotate(-25deg) scaleY(1); }
+  50% { transform: rotate(-45deg) scaleY(0.75); }
+}
+@keyframes flapRight {
+  0%, 100% { transform: rotate(25deg) scaleY(1); }
+  50% { transform: rotate(45deg) scaleY(0.75); }
+}
+@keyframes floatBee {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+@keyframes honeyDrip {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.1) translateY(3px); }
+}
+@keyframes shakeFlower {
+  0%, 100% { transform: rotate(0deg); }
+  33% { transform: rotate(-4deg); }
+  66% { transform: rotate(4deg); }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
+}
+@keyframes softPop {
+  0% { transform: scale(0.96); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes sparkleFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+  50% { transform: translateY(-8px) rotate(12deg); opacity: 1; }
+}
+.animate-flap-left {
+  animation: flapLeft 0.12s infinite ease-in-out;
+  transform-origin: 100% 100%;
+}
+.animate-flap-right {
+  animation: flapRight 0.12s infinite ease-in-out;
+  transform-origin: 0% 100%;
+}
+.animate-float-bee {
+  animation: floatBee 2.5s infinite ease-in-out;
+}
+.animate-drip {
+  animation: honeyDrip 3.5s infinite ease-in-out;
+  transform-origin: top center;
+}
+.animate-flower {
+  animation: shakeFlower 4s infinite ease-in-out;
+}
+.animate-glow {
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+.animate-soft-pop {
+  animation: softPop 0.22s ease-out both;
+}
+.animate-sparkle {
+  animation: sparkleFloat 2.8s infinite ease-in-out;
+}
+.bee-game-root {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  overscroll-behavior: contain;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+}
+.bee-button {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+@supports (-webkit-touch-callout: none) {
+  .ios-safe-top { padding-top: max(0.75rem, env(safe-area-inset-top)); }
+}
+@media (max-width: 420px) {
+  .mobile-tight-title { font-size: 1rem; line-height: 1.2; }
+  .mobile-small-text { font-size: 0.72rem; line-height: 1.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-flap-left,
+  .animate-flap-right,
+  .animate-float-bee,
+  .animate-drip,
+  .animate-flower,
+  .animate-glow,
+  .animate-soft-pop,
+  .animate-sparkle {
+    animation: none !important;
+  }
+}
+.hexagon-clip {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+`;
+  function injectBeeGameStyles() {
+    if (typeof document === "undefined") return;
+    const existing = document.getElementById("bee-kingdom-game-styles");
+    if (existing) return;
+    const style = document.createElement("style");
+    style.id = "bee-kingdom-game-styles";
+    style.innerHTML = styleTag;
+    document.head.appendChild(style);
+  }
+  const STAGES_DATA = [
+    { id: 1, text: "\u062A\u062C\u0645\u0639 \u0627\u0644\u0631\u062D\u064A\u0642 \u0645\u0646 \u0627\u0644\u0623\u0632\u0647\u0627\u0631 \u0627\u0644\u0645\u0644\u0648\u0646\u0629", type: "flower" },
+    { id: 2, text: "\u062A\u0637\u064A\u0631 \u0627\u0644\u0646\u062D\u0644\u0629 \u0639\u0627\u0626\u062F\u0629 \u0628\u0646\u0634\u0627\u0637 \u0625\u0644\u0649 \u0627\u0644\u062E\u0644\u064A\u0629", type: "bee" },
+    { id: 3, text: "\u062A\u0635\u0646\u0639 \u0645\u0646 \u0627\u0644\u0631\u062D\u064A\u0642 \u0639\u0633\u0644\u0627\u064B \u0644\u0630\u064A\u0630\u0627\u064B \u0634\u0647\u064A\u0627\u064B", type: "honey" },
+    { id: 4, text: "\u062A\u062E\u0632\u0646 \u0627\u0644\u063A\u0630\u0627\u0621 \u0641\u064A \u0642\u0631\u0635 \u0627\u0644\u0634\u0645\u0639 \u0644\u0644\u0634\u062A\u0627\u0621", type: "hive" }
+  ];
+  const JOBS_DATA = [
+    { role: "\u0627\u0644\u0645\u0644\u0643\u0629", type: "queen", job: "\u062A\u0636\u0639 \u0627\u0644\u0628\u064A\u0636 \u0648\u062A\u0648\u062D\u062F \u062E\u0644\u064A\u0629 \u0627\u0644\u0646\u062D\u0644 \u0628\u0631\u0627\u0626\u062D\u062A\u0647\u0627 \u0627\u0644\u0645\u0645\u064A\u0632\u0629" },
+    { role: "\u0627\u0644\u0646\u062D\u0644\u0629 \u0627\u0644\u0639\u0627\u0645\u0644\u0629", type: "worker", job: "\u062A\u062C\u0645\u0639 \u0627\u0644\u0631\u062D\u064A\u0642 \u0648\u062A\u0646\u0638\u0641 \u0627\u0644\u062E\u0644\u064A\u0629 \u0648\u062A\u0635\u0646\u0639 \u0627\u0644\u0639\u0633\u0644 \u0648\u062A\u062D\u0645\u064A\u0647\u0627" },
+    { role: "\u0627\u0644\u0630\u0643\u0648\u0631", type: "drone", job: "\u062A\u0633\u0627\u0639\u062F \u0641\u064A \u0628\u0642\u0627\u0621 \u0645\u062C\u062A\u0645\u0639 \u0627\u0644\u0646\u062D\u0644 \u0642\u0648\u064A\u064B\u0627 \u0648\u0645\u062A\u0645\u0627\u0633\u0643\u064B\u0627" }
+  ];
+  const REFLECTION_PROMPTS = [
+    {
+      title: "\u{1F91D} \u0645\u0647\u0627\u0631\u0627\u062A \u0627\u0644\u062A\u0639\u0627\u0648\u0646 (ATL)",
+      q: "\u0645\u0627\u0630\u0627 \u062A\u0639\u0644\u0645\u0646\u0627 \u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0646\u062D\u0644 \u0639\u0646 \u0642\u064A\u0645\u0629 \u0627\u0644\u062A\u0639\u0627\u0648\u0646\u061F",
+      options: [
+        "\u0643\u0644 \u0646\u062D\u0644\u0629 \u062A\u0633\u0627\u0639\u062F \u0627\u0644\u062E\u0644\u064A\u0629 \u0648\u062A\u0643\u0645\u0644 \u062F\u0648\u0631 \u0632\u0645\u064A\u0644\u0627\u062A\u0647\u0627 \u0628\u062D\u0628 \u0648\u0646\u0634\u0627\u0637.",
+        "\u0643\u0644 \u0646\u062D\u0644\u0629 \u062A\u0639\u0645\u0644 \u0628\u0645\u0641\u0631\u062F\u0647\u0627 \u0644\u062A\u062B\u0628\u062A \u0623\u0646\u0647\u0627 \u0627\u0644\u0623\u0642\u0648\u0649 \u0648\u0627\u0644\u0623\u0641\u0636\u0644.",
+        "\u0627\u0644\u062A\u0639\u0627\u0648\u0646 \u063A\u064A\u0631 \u0645\u0647\u0645\u060C \u0641\u0627\u0644\u0645\u0644\u0643\u0629 \u0642\u0627\u062F\u0631\u0629 \u0639\u0644\u0649 \u0641\u0639\u0644 \u0643\u0644 \u0634\u064A\u0621 \u0628\u0645\u0641\u0631\u062F\u0647\u0627."
+      ],
+      correct: "\u0643\u0644 \u0646\u062D\u0644\u0629 \u062A\u0633\u0627\u0639\u062F \u0627\u0644\u062E\u0644\u064A\u0629 \u0648\u062A\u0643\u0645\u0644 \u062F\u0648\u0631 \u0632\u0645\u064A\u0644\u0627\u062A\u0647\u0627 \u0628\u062D\u0628 \u0648\u0646\u0634\u0627\u0637.",
+      parentTip: "\u0627\u0633\u0623\u0644 \u0637\u0641\u0644\u0643 \u0628\u0627\u0628\u062A\u0633\u0627\u0645\u0629: \u0643\u064A\u0641 \u0646\u0637\u0628\u0642 \u062A\u0639\u0627\u0648\u0646 \u0627\u0644\u0646\u062D\u0644 \u0627\u0644\u062C\u0645\u064A\u0644 \u0627\u0644\u064A\u0648\u0645 \u0641\u064A \u0645\u0646\u0632\u0644\u0646\u0627 \u0648\u0641\u064A \u063A\u0631\u0641\u062A\u0643\u061F"
+    },
+    {
+      title: "\u{1F4CB} \u0627\u0644\u0646\u0638\u0627\u0645 \u0648\u0627\u0644\u0645\u0633\u0624\u0648\u0644\u064A\u0629",
+      q: "\u0643\u064A\u0641 \u064A\u0638\u0647\u0631 \u0627\u0644\u0646\u0638\u0627\u0645 \u0627\u0644\u0628\u062F\u064A\u0639 \u0641\u064A \u062D\u064A\u0627\u0629 \u0623\u0641\u0631\u0627\u062F \u0627\u0644\u062E\u0644\u064A\u0629\u061F",
+      options: [
+        "\u062A\u062A\u0648\u0632\u0639 \u0627\u0644\u0623\u062F\u0648\u0627\u0631 \u0628\u062F\u0642\u0629 \u0643\u0628\u064A\u0631\u0629\u060C \u0648\u0643\u0644 \u0641\u0631\u062F \u064A\u0639\u0631\u0641 \u0648\u0638\u064A\u0641\u062A\u0647 \u0648\u064A\u0644\u062A\u0632\u0645 \u0628\u0647\u0627.",
+        "\u064A\u0639\u0645\u0644 \u0627\u0644\u0646\u062D\u0644 \u0628\u0639\u0634\u0648\u0627\u0626\u064A\u0629 \u0643\u0627\u0645\u0644\u0629 \u0648\u0628\u062F\u0648\u0646 \u0623\u064A \u062A\u062E\u0637\u064A\u0637 \u0645\u0633\u0628\u0642.",
+        "\u0627\u0644\u0645\u0644\u0643\u0629 \u062A\u0639\u0645\u0644 \u0637\u0648\u0627\u0644 \u0627\u0644\u064A\u0648\u0645 \u0628\u064A\u0646\u0645\u0627 \u062A\u0633\u062A\u0631\u062E\u064A \u0627\u0644\u0639\u0627\u0645\u0644\u0627\u062A \u062F\u0648\u0646 \u0639\u0645\u0644."
+      ],
+      correct: "\u062A\u062A\u0648\u0632\u0639 \u0627\u0644\u0623\u062F\u0648\u0627\u0631 \u0628\u062F\u0642\u0629 \u0643\u0628\u064A\u0631\u0629\u060C \u0648\u0643\u0644 \u0641\u0631\u062F \u064A\u0639\u0631\u0641 \u0648\u0638\u064A\u0641\u062A\u0647 \u0648\u064A\u0644\u062A\u0632\u0645 \u0628\u0647\u0627.",
+      parentTip: "\u0634\u062C\u0639 \u0637\u0641\u0644\u0643 \u0639\u0644\u0649 \u0627\u0642\u062A\u0631\u0627\u062D \u0641\u0643\u0631\u0629 \u0630\u0643\u064A\u0629 \u0644\u062A\u0646\u0638\u064A\u0645 \u0623\u0644\u0639\u0627\u0628\u0647 \u0623\u0648 \u0643\u062A\u0628\u0647 \u0627\u0644\u0645\u062F\u0631\u0633\u064A\u0629 \u0645\u062B\u0644 \u0627\u0644\u0646\u062D\u0644."
+    },
+    {
+      title: "\u{1F9E0} \u0645\u0647\u0627\u0631\u0627\u062A \u0627\u0644\u062A\u0641\u0643\u064A\u0631 \u0648\u0627\u0644\u0627\u0633\u062A\u0642\u0635\u0627\u0621",
+      q: "\u0645\u0627 \u0627\u0644\u062F\u0644\u064A\u0644 \u0627\u0644\u0623\u0642\u0648\u0649 \u0639\u0644\u0649 \u0623\u0646 \u0627\u0644\u0646\u062D\u0644\u0629 \u0627\u0644\u0639\u0627\u0645\u0644\u0629 \u0647\u064A \u0627\u0644\u0645\u062D\u0631\u0643 \u0627\u0644\u0631\u0626\u064A\u0633\u064A \u0644\u0644\u062E\u0644\u064A\u0629\u061F",
+      options: [
+        "\u0623\u0646\u0647\u0627 \u062A\u062C\u0645\u0639 \u0627\u0644\u0631\u062D\u064A\u0642\u060C \u062A\u0635\u0646\u0639 \u0627\u0644\u0639\u0633\u0644\u060C \u0648\u062A\u0646\u0638\u0641 \u0648\u062A\u062D\u0631\u0633 \u0627\u0644\u062E\u0644\u064A\u0629 \u0648\u062A\u0637\u0639\u0645 \u0627\u0644\u0635\u063A\u0627\u0631.",
+        "\u0623\u0646\u0647\u0627 \u062A\u0642\u0636\u064A \u0627\u0644\u064A\u0648\u0645 \u0628\u0623\u0643\u0645\u0644\u0647 \u0646\u0627\u0626\u0645\u0629 \u062F\u0627\u062E\u0644 \u063A\u0631\u0641 \u0627\u0644\u0634\u0645\u0639 \u062F\u0648\u0646 \u062D\u0631\u0643\u0629.",
+        "\u0623\u0646\u0647\u0627 \u062A\u0636\u0639 \u0622\u0644\u0627\u0641 \u0627\u0644\u0628\u064A\u0636 \u064A\u0648\u0645\u064A\u0627\u064B \u0644\u062A\u0631\u0628\u064A\u0629 \u0627\u0644\u0623\u062C\u064A\u0627\u0644 \u0627\u0644\u062C\u062F\u064A\u062F\u0629."
+      ],
+      correct: "\u0623\u0646\u0647\u0627 \u062A\u062C\u0645\u0639 \u0627\u0644\u0631\u062D\u064A\u0642\u060C \u062A\u0635\u0646\u0639 \u0627\u0644\u0639\u0633\u0644\u060C \u0648\u062A\u0646\u0638\u0641 \u0648\u062A\u062D\u0631\u0633 \u0627\u0644\u062E\u0644\u064A\u0629 \u0648\u062A\u0637\u0639\u0645 \u0627\u0644\u0635\u063A\u0627\u0631.",
+      parentTip: "\u0627\u0633\u062A\u0639\u0631\u0636 \u0645\u0639 \u0637\u0641\u0644\u0643 \u0628\u0627\u0645\u062A\u0646\u0627\u0646 \u0627\u0644\u062C\u0647\u0648\u062F \u0627\u0644\u0643\u0628\u064A\u0631\u0629 \u0627\u0644\u062A\u064A \u062A\u0628\u0630\u0644\u0647\u0627 \u0623\u0646\u062A \u064A\u0648\u0645\u064A\u0627\u064B \u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0623\u0633\u0631\u0629."
+    },
+    {
+      title: "\u{1F331} \u0635\u0641\u0627\u062A \u0627\u0644\u0645\u062A\u0639\u0644\u0645 (Learner Profile)",
+      q: "\u0623\u064A \u0645\u0646 \u0635\u0641\u0627\u062A \u0627\u0644\u0645\u062A\u0639\u0644\u0645 \u064A\u062C\u0633\u062F\u0647\u0627 \u0627\u0644\u0646\u062D\u0644 \u0628\u0646\u0634\u0627\u0637\u0647 \u0648\u0628\u062D\u062B\u0647 \u0627\u0644\u0645\u0633\u062A\u0645\u0631\u061F",
+      options: [
+        "\u0645\u062A\u0639\u0627\u0648\u0646\u060C \u0645\u0646\u0638\u0645\u060C \u0648\u0645\u0628\u0627\u062F\u0631 \u0630\u0648 \u0645\u0633\u0624\u0648\u0644\u064A\u0629 \u0639\u0627\u0644\u064A\u0629 \u062A\u062C\u0627\u0647 \u0645\u062C\u062A\u0645\u0639\u0647.",
+        "\u0645\u062A\u0631\u062F\u062F \u064A\u062A\u0631\u0643 \u0639\u0645\u0644 \u0627\u0644\u064A\u0648\u0645 \u0625\u0644\u0649 \u0627\u0644\u063A\u062F \u0648\u064A\u0646\u062A\u0638\u0631 \u0627\u0644\u0622\u062E\u0631\u064A\u0646.",
+        "\u0627\u0646\u0637\u0648\u0627\u0626\u064A\u060C \u063A\u064A\u0631 \u0645\u0643\u062A\u0631\u062B \u0628\u0627\u0644\u0628\u064A\u0626\u0629 \u0627\u0644\u0645\u062D\u064A\u0637\u0629 \u0628\u0647 \u0648\u0628\u0627\u0644\u0623\u0632\u0647\u0627\u0631."
+      ],
+      correct: "\u0645\u062A\u0639\u0627\u0648\u0646\u060C \u0645\u0646\u0638\u0645\u060C \u0648\u0645\u0628\u0627\u062F\u0631 \u0630\u0648 \u0645\u0633\u0624\u0648\u0644\u064A\u0629 \u0639\u0627\u0644\u064A\u0629 \u062A\u062C\u0627\u0647 \u0645\u062C\u062A\u0645\u0639\u0647.",
+      parentTip: "\u0627\u0645\u062A\u062F\u062D \u0635\u0641\u0629 \u0625\u064A\u062C\u0627\u0628\u064A\u0629 \u064A\u062A\u062D\u0644\u0649 \u0628\u0647\u0627 \u0637\u0641\u0644\u0643 \u062A\u0634\u0628\u0647 \u0646\u0634\u0627\u0637 \u0627\u0644\u0646\u062D\u0644\u0629 \u0648\u0645\u0628\u0627\u062F\u0631\u062A\u0647\u0627 \u0627\u0644\u062C\u0645\u064A\u0644\u0629."
+    },
+    {
+      title: "\u{1F4A1} \u0627\u0644\u062A\u0637\u0628\u064A\u0642 \u0627\u0644\u0639\u0645\u0644\u064A \u0648\u0627\u0644\u0645\u0628\u0627\u062F\u0631\u0629 (Action)",
+      q: "\u0645\u0627 \u0647\u064A \u0627\u0644\u0645\u0628\u0627\u062F\u0631\u0629 \u0627\u0644\u0625\u064A\u062C\u0627\u0628\u064A\u0629 \u0627\u0644\u062A\u064A \u0633\u062A\u0642\u0648\u0645 \u0628\u0647\u0627 \u0641\u064A \u0645\u0646\u0632\u0644\u0643 \u0628\u0639\u062F \u0625\u0646\u0647\u0627\u0621 \u0647\u0630\u0647 \u0627\u0644\u0644\u0639\u0628\u0629\u061F",
+      options: [
+        "\u0645\u0633\u0627\u0639\u062F\u0629 \u0623\u0633\u0631\u062A\u064A \u0641\u064A \u062A\u0646\u0638\u064A\u0645 \u0627\u0644\u0645\u0646\u0632\u0644 \u0648\u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629 \u0628\u0627\u0644\u0645\u0647\u0627\u0645 \u0627\u0644\u064A\u0648\u0645\u064A\u0629 \u0628\u062D\u0628.",
+        "\u0627\u0644\u0644\u0639\u0628 \u0637\u0648\u0627\u0644 \u0627\u0644\u0648\u0642\u062A \u0648\u0625\u0647\u0645\u0627\u0644 \u0648\u0627\u062C\u0628\u0627\u062A\u064A \u0627\u0644\u0645\u062F\u0631\u0633\u064A\u0629 \u0648\u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629.",
+        "\u0627\u0644\u0627\u0639\u062A\u0645\u0627\u062F \u0639\u0644\u0649 \u0627\u0644\u0622\u062E\u0631\u064A\u0646 \u0644\u0644\u0642\u064A\u0627\u0645 \u0628\u0645\u0647\u0627\u0645\u064A \u0627\u0644\u0634\u062E\u0635\u064A\u0629 \u0648\u062A\u0646\u0638\u064A\u0641 \u063A\u0631\u0641\u062A\u064A."
+      ],
+      correct: "\u0645\u0633\u0627\u0639\u062F\u0629 \u0623\u0633\u0631\u062A\u064A \u0641\u064A \u062A\u0646\u0638\u064A\u0645 \u0627\u0644\u0645\u0646\u0632\u0644 \u0648\u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629 \u0628\u0627\u0644\u0645\u0647\u0627\u0645 \u0627\u0644\u064A\u0648\u0645\u064A\u0629 \u0628\u062D\u0628.",
+      parentTip: "\u0627\u062A\u0641\u0642\u0627 \u0645\u0639\u0627\u064B \u0627\u0644\u0622\u0646 \u0639\u0644\u0649 \u0645\u0647\u0645\u0629 \u0645\u0645\u062A\u0639\u0629 \u062A\u0634\u0627\u0631\u0643\u0627\u0646 \u0641\u064A\u0647\u0627 \u0627\u0644\u0644\u064A\u0644\u0629 \u0644\u062E\u062F\u0645\u0629 \u0627\u0644\u0645\u0646\u0632\u0644."
+    }
+  ];
+  function BeeSvg({ kind = "worker", className = "h-16 w-16" }) {
+    const isQueen = kind === "queen";
+    const isDrone = kind === "drone";
+    return /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 260 220", className: `${className} transition-all duration-300 drop-shadow-md`, "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("defs", null, /* @__PURE__ */ React.createElement("linearGradient", { id: `bodyGrad-${kind}`, x1: "0", y1: "0", x2: "0", y2: "1" }, /* @__PURE__ */ React.createElement("stop", { offset: "0%", stopColor: "#FFF78A" }), /* @__PURE__ */ React.createElement("stop", { offset: "50%", stopColor: "#F9BE1A" }), /* @__PURE__ */ React.createElement("stop", { offset: "100%", stopColor: "#D97706" })), /* @__PURE__ */ React.createElement("linearGradient", { id: `wingGrad-${kind}`, x1: "0", y1: "0", x2: "1", y2: "1" }, /* @__PURE__ */ React.createElement("stop", { offset: "0%", stopColor: "#E0F7FF", stopOpacity: "0.95" }), /* @__PURE__ */ React.createElement("stop", { offset: "100%", stopColor: "#8AD4FF", stopOpacity: "0.7" }))), /* @__PURE__ */ React.createElement("g", null, /* @__PURE__ */ React.createElement(
+      "ellipse",
+      {
+        cx: "88",
+        cy: "74",
+        rx: "44",
+        ry: "25",
+        fill: `url(#wingGrad-${kind})`,
+        stroke: "#38BDF8",
+        strokeWidth: "2.5",
+        className: "animate-flap-left"
+      }
+    ), /* @__PURE__ */ React.createElement(
+      "ellipse",
+      {
+        cx: "172",
+        cy: "74",
+        rx: "44",
+        ry: "25",
+        fill: `url(#wingGrad-${kind})`,
+        stroke: "#38BDF8",
+        strokeWidth: "2.5",
+        className: "animate-flap-right"
+      }
+    )), /* @__PURE__ */ React.createElement("g", null, /* @__PURE__ */ React.createElement("ellipse", { cx: "130", cy: "132", rx: "74", ry: "56", fill: `url(#bodyGrad-${kind})`, stroke: "#451A03", strokeWidth: "5" }), /* @__PURE__ */ React.createElement("path", { d: "M88 100 C78 122 78 142 90 164", stroke: "#451A03", strokeWidth: "12", strokeLinecap: "round", fill: "none" }), /* @__PURE__ */ React.createElement("path", { d: "M130 86 C118 118 118 146 130 178", stroke: "#451A03", strokeWidth: "12", strokeLinecap: "round", fill: "none" }), /* @__PURE__ */ React.createElement("path", { d: "M172 100 C182 122 182 142 170 164", stroke: "#451A03", strokeWidth: "12", strokeLinecap: "round", fill: "none" }), /* @__PURE__ */ React.createElement("circle", { cx: "130", cy: "58", r: "38", fill: "#FEF08A", stroke: "#451A03", strokeWidth: "5" }), /* @__PURE__ */ React.createElement("circle", { cx: "114", cy: "54", r: "7", fill: "#451A03" }), /* @__PURE__ */ React.createElement("circle", { cx: "112", cy: "51", r: "2.5", fill: "#FFFFFF" }), /* @__PURE__ */ React.createElement("circle", { cx: "146", cy: "54", r: "7", fill: "#451A03" }), /* @__PURE__ */ React.createElement("circle", { cx: "144", cy: "51", r: "2.5", fill: "#FFFFFF" }), /* @__PURE__ */ React.createElement("circle", { cx: "102", cy: "68", r: "6", fill: "#FB7185", opacity: "0.8" }), /* @__PURE__ */ React.createElement("circle", { cx: "158", cy: "68", r: "6", fill: "#FB7185", opacity: "0.8" }), /* @__PURE__ */ React.createElement("path", { d: "M120 68 Q130 82 140 68", fill: "none", stroke: "#451A03", strokeWidth: "4.5", strokeLinecap: "round" }), /* @__PURE__ */ React.createElement("path", { d: "M116 24 Q100 10 104 2", stroke: "#451A03", strokeWidth: "4.5", strokeLinecap: "round", fill: "none" }), /* @__PURE__ */ React.createElement("circle", { cx: "104", cy: "2", r: "6.5", fill: "#F43F5E" }), /* @__PURE__ */ React.createElement("path", { d: "M144 24 Q160 10 156 2", stroke: "#451A03", strokeWidth: "4.5", strokeLinecap: "round", fill: "none" }), /* @__PURE__ */ React.createElement("circle", { cx: "156", cy: "2", r: "6.5", fill: "#F43F5E" }), /* @__PURE__ */ React.createElement("path", { d: "M84 158 L58 188", stroke: "#451A03", strokeWidth: "5", strokeLinecap: "round" }), /* @__PURE__ */ React.createElement("path", { d: "M114 180 L96 214", stroke: "#451A03", strokeWidth: "5", strokeLinecap: "round" }), /* @__PURE__ */ React.createElement("path", { d: "M146 180 L164 214", stroke: "#451A03", strokeWidth: "5", strokeLinecap: "round" }), /* @__PURE__ */ React.createElement("path", { d: "M176 158 L202 188", stroke: "#451A03", strokeWidth: "5", strokeLinecap: "round" }), /* @__PURE__ */ React.createElement("path", { d: "M130 188 L130 204", stroke: "#451A03", strokeWidth: "6.5", strokeLinecap: "round" })), isQueen && /* @__PURE__ */ React.createElement("g", null, /* @__PURE__ */ React.createElement("path", { d: "M100 24 L114 3 L130 18 L146 3 L160 24 Z", fill: "#FBBF24", stroke: "#B45309", strokeWidth: "3" }), /* @__PURE__ */ React.createElement("circle", { cx: "114", cy: "3", r: "3.5", fill: "#EF4444" }), /* @__PURE__ */ React.createElement("circle", { cx: "130", cy: "18", r: "3.5", fill: "#10B981" }), /* @__PURE__ */ React.createElement("circle", { cx: "146", cy: "3", r: "3.5", fill: "#3B82F6" })), isDrone && /* @__PURE__ */ React.createElement("g", null, /* @__PURE__ */ React.createElement("circle", { cx: "114", cy: "54", r: "12", fill: "none", stroke: "#1D4ED8", strokeWidth: "3" }), /* @__PURE__ */ React.createElement("circle", { cx: "146", cy: "54", r: "12", fill: "none", stroke: "#1D4ED8", strokeWidth: "3" }), /* @__PURE__ */ React.createElement("line", { x1: "126", y1: "54", x2: "134", y2: "54", stroke: "#1D4ED8", strokeWidth: "3" })));
+  }
+  function HiveSvg({ className = "h-24 w-24" }) {
+    return /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 320 280", className, "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("defs", null, /* @__PURE__ */ React.createElement("linearGradient", { id: "hiveGrad", x1: "0", y1: "0", x2: "1", y2: "1" }, /* @__PURE__ */ React.createElement("stop", { offset: "0%", stopColor: "#FEF08A" }), /* @__PURE__ */ React.createElement("stop", { offset: "50%", stopColor: "#FBBF24" }), /* @__PURE__ */ React.createElement("stop", { offset: "100%", stopColor: "#D97706" })), /* @__PURE__ */ React.createElement("linearGradient", { id: "doorGrad", x1: "0", y1: "0", x2: "0", y2: "1" }, /* @__PURE__ */ React.createElement("stop", { offset: "0%", stopColor: "#78350F" }), /* @__PURE__ */ React.createElement("stop", { offset: "100%", stopColor: "#451A03" }))), /* @__PURE__ */ React.createElement("ellipse", { cx: "160", cy: "255", rx: "120", ry: "12", fill: "#78350F", opacity: "0.15" }), /* @__PURE__ */ React.createElement("g", null, /* @__PURE__ */ React.createElement("path", { d: "M70 230 C30 180 40 90 95 50 C130 20 190 20 225 50 C280 90 290 180 250 230 Z", fill: "url(#hiveGrad)", stroke: "#92400E", strokeWidth: "6.5" }), /* @__PURE__ */ React.createElement("path", { d: "M74 85 C115 55 205 55 246 85", fill: "none", stroke: "#B45309", strokeWidth: "8", strokeLinecap: "round", opacity: "0.35" }), /* @__PURE__ */ React.createElement("path", { d: "M58 125 C110 95 210 95 262 125", fill: "none", stroke: "#B45309", strokeWidth: "8", strokeLinecap: "round", opacity: "0.35" }), /* @__PURE__ */ React.createElement("path", { d: "M52 165 C110 135 210 135 268 165", fill: "none", stroke: "#B45309", strokeWidth: "8", strokeLinecap: "round", opacity: "0.35" }), /* @__PURE__ */ React.createElement("path", { d: "M62 205 C110 185 210 185 258 205", fill: "none", stroke: "#B45309", strokeWidth: "8", strokeLinecap: "round", opacity: "0.35" }), /* @__PURE__ */ React.createElement("g", { opacity: "0.22", stroke: "#78350F", strokeWidth: "3", fill: "none" }, /* @__PURE__ */ React.createElement("path", { d: "M110 102 l14 -8 l14 8 v16 l-14 8 l-14 -8z" }), /* @__PURE__ */ React.createElement("path", { d: "M146 102 l14 -8 l14 8 v16 l-14 8 l-14 -8z" }), /* @__PURE__ */ React.createElement("path", { d: "M182 102 l14 -8 l14 8 v16 l-14 8 l-14 -8z" }), /* @__PURE__ */ React.createElement("path", { d: "M128 132 l14 -8 l14 8 v16 l-14 8 l-14 -8z" }), /* @__PURE__ */ React.createElement("path", { d: "M164 132 l14 -8 l14 8 v16 l-14 8 l-14 -8z" })), /* @__PURE__ */ React.createElement("ellipse", { cx: "160", cy: "175", rx: "36", ry: "24", fill: "url(#doorGrad)", stroke: "#92400E", strokeWidth: "4" }), /* @__PURE__ */ React.createElement("ellipse", { cx: "160", cy: "170", rx: "24", ry: "14", fill: "#1C1917" }), /* @__PURE__ */ React.createElement("circle", { cx: "148", cy: "165", r: "3", fill: "#FDE047", opacity: "0.4" })), /* @__PURE__ */ React.createElement("path", { d: "M160 30 L160 5", stroke: "#78350F", strokeWidth: "12", strokeLinecap: "round" }));
+  }
+  function FlowerSvg({ className = "h-24 w-24" }) {
+    return /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 200 200", className: `${className} animate-flower`, "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("g", null, /* @__PURE__ */ React.createElement("path", { d: "M100 110 V195", stroke: "#16A34A", strokeWidth: "8", strokeLinecap: "round" }), /* @__PURE__ */ React.createElement("path", { d: "M100 150 Q70 140 60 125", fill: "none", stroke: "#16A34A", strokeWidth: "6.5", strokeLinecap: "round" }), /* @__PURE__ */ React.createElement("path", { d: "M100 170 Q130 160 140 145", fill: "none", stroke: "#16A34A", strokeWidth: "6.5", strokeLinecap: "round" }), /* @__PURE__ */ React.createElement("circle", { cx: "100", cy: "65", r: "30", fill: "#EF4444" }), " ", /* @__PURE__ */ React.createElement("circle", { cx: "142", cy: "95", r: "30", fill: "#F59E0B" }), " ", /* @__PURE__ */ React.createElement("circle", { cx: "125", cy: "144", r: "30", fill: "#06B6D4" }), " ", /* @__PURE__ */ React.createElement("circle", { cx: "75", cy: "144", r: "30", fill: "#8B5CF6" }), "  ", /* @__PURE__ */ React.createElement("circle", { cx: "58", cy: "95", r: "30", fill: "#EC4899" }), "  ", /* @__PURE__ */ React.createElement("circle", { cx: "100", cy: "100", r: "26", fill: "#FEF08A", stroke: "#CA8A04", strokeWidth: "3.5" }), /* @__PURE__ */ React.createElement("circle", { cx: "95", cy: "95", r: "18", fill: "#FACC15", opacity: "0.75" })));
+  }
+  function HoneySvg({ className = "h-24 w-24" }) {
+    return /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 200 200", className, "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("g", null, /* @__PURE__ */ React.createElement("rect", { x: "70", y: "30", width: "60", height: "20", rx: "6", fill: "#92400E" }), /* @__PURE__ */ React.createElement("rect", { x: "65", y: "44", width: "70", height: "8", rx: "3", fill: "#78350F" }), /* @__PURE__ */ React.createElement("path", { d: "M55 52 H145 C155 52 165 65 165 85 V155 C165 175 150 190 130 190 H70 C50 190 35 175 35 155 V85 C35 65 45 52 55 52 Z", fill: "#FEF3C7", stroke: "#92400E", strokeWidth: "5" }), /* @__PURE__ */ React.createElement("path", { d: "M41 85 C41 85 70 75 100 85 C130 95 159 85 159 85 V155 C159 170 145 184 130 184 H70 C55 184 41 170 41 155 Z", fill: "#F59E0B" }), /* @__PURE__ */ React.createElement("path", { d: "M41 105 C70 95 100 115 130 100 C145 92 159 105 159 105 V155 C159 170 145 184 130 184 H70 C55 184 41 170 41 155 Z", fill: "#EA580C", opacity: "0.3" }), /* @__PURE__ */ React.createElement("rect", { x: "65", y: "110", width: "70", height: "42", rx: "8", fill: "#FFFFFF", stroke: "#E2E8F0", strokeWidth: "2", opacity: "0.95" }), /* @__PURE__ */ React.createElement("text", { x: "100", y: "138", textAnchor: "middle", fontSize: "21", fontWeight: "bold", fill: "#78350F", fontFamily: "sans-serif" }, "\u0639\u0633\u0644"), /* @__PURE__ */ React.createElement("circle", { cx: "140", cy: "115", r: "7.5", fill: "#F59E0B", className: "animate-drip" })));
+  }
+  function ArtworkSelector({ type, className = "h-20 w-20" }) {
+    if (type === "flower") return /* @__PURE__ */ React.createElement(FlowerSvg, { className });
+    if (type === "bee") return /* @__PURE__ */ React.createElement(BeeSvg, { kind: "worker", className });
+    if (type === "honey") return /* @__PURE__ */ React.createElement(HoneySvg, { className });
+    return /* @__PURE__ */ React.createElement(HiveSvg, { className });
+  }
+  let globalAudioCtx = null;
+  function isBrowserAudioReady() {
+    return typeof window !== "undefined" && !!(window.AudioContext || window.webkitAudioContext);
+  }
+  async function ensureAudioContext() {
+    if (!isBrowserAudioReady()) return null;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!globalAudioCtx || globalAudioCtx.state === "closed") {
+      globalAudioCtx = new AudioContextClass();
+    }
+    if (globalAudioCtx.state === "suspended" && globalAudioCtx.resume) {
+      try {
+        await globalAudioCtx.resume();
+      } catch (err) {
+        console.warn("Audio resume was blocked until the next tap.", err);
+      }
+    }
+    return globalAudioCtx;
+  }
+  async function unlockAudioForMobile() {
+    const ctx = await ensureAudioContext();
+    if (!ctx) return false;
+    try {
+      const buffer = ctx.createBuffer(1, 1, 22050);
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.start(0);
+    } catch (err) {
+      console.warn("Silent audio unlock skipped.", err);
+    }
+    return ctx.state === "running";
+  }
+  async function playSynthesizedSound(type, isMuted) {
+    if (isMuted) return;
+    try {
+      const ctx = await ensureAudioContext();
+      if (!ctx || ctx.state !== "running") return;
+      const playTone = (freq, delay, duration, volume = 0.08, waveType = "sine") => {
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        osc.type = waveType;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+        gainNode.gain.setValueAtTime(1e-3, ctx.currentTime + delay);
+        gainNode.gain.linearRampToValueAtTime(volume, ctx.currentTime + delay + 0.02);
+        gainNode.gain.exponentialRampToValueAtTime(1e-3, ctx.currentTime + delay + duration);
+        osc.start(ctx.currentTime + delay);
+        osc.stop(ctx.currentTime + delay + duration);
+      };
+      if (type === "click") {
+        playTone(520, 0, 0.08, 0.06, "triangle");
+      } else if (type === "success") {
+        playTone(523.25, 0, 0.12, 0.07);
+        playTone(659.25, 0.07, 0.12, 0.07);
+        playTone(783.99, 0.14, 0.22, 0.07);
+      } else if (type === "fail") {
+        playTone(200, 0, 0.18, 0.09, "sawtooth");
+        playTone(150, 0.08, 0.25, 0.09, "sawtooth");
+      } else if (type === "victory") {
+        const notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77, 1046.5];
+        notes.forEach((freq, idx) => {
+          playTone(freq, idx * 0.07, 0.16, 0.05);
+        });
+      }
+    } catch (err) {
+      console.warn("Mobile browser Web Audio API locked or delayed.", err);
+    }
+  }
+  function App() {
+    const [currentStep, setCurrentStep] = useState("welcome");
+    const [isMuted, setIsMuted] = useState(false);
+    const [score, setScore] = useState(0);
+    const [safariAudioUnlocked, setSafariAudioUnlocked] = useState(false);
+    useEffect(() => {
+      injectBeeGameStyles();
+    }, []);
+    const triggerSound = (type) => {
+      void playSynthesizedSound(type, isMuted);
+    };
+    const unlockSafariAudio = async () => {
+      const unlocked = await unlockAudioForMobile();
+      setSafariAudioUnlocked(unlocked);
+      void playSynthesizedSound("click", false);
+    };
+    useEffect(() => {
+      const handleFirstTap = async () => {
+        const unlocked = await unlockAudioForMobile();
+        if (unlocked) setSafariAudioUnlocked(true);
+        window.removeEventListener("touchstart", handleFirstTap);
+        window.removeEventListener("pointerdown", handleFirstTap);
+        window.removeEventListener("click", handleFirstTap);
+      };
+      window.addEventListener("touchstart", handleFirstTap, { passive: true });
+      window.addEventListener("pointerdown", handleFirstTap, { passive: true });
+      window.addEventListener("click", handleFirstTap);
+      return () => {
+        window.removeEventListener("touchstart", handleFirstTap);
+        window.removeEventListener("pointerdown", handleFirstTap);
+        window.removeEventListener("click", handleFirstTap);
+      };
+    }, []);
+    const [scrambledStages, setScrambledStages] = useState([]);
+    const [placedSlots, setPlacedSlots] = useState([null, null, null, null]);
+    const [game1Error, setGame1Error] = useState("");
+    const [game1Completed, setGame1Completed] = useState(false);
+    const [selectedRole, setSelectedRole] = useState(null);
+    const [matchedJobs, setMatchedJobs] = useState({});
+    const [game2Error, setGame2Error] = useState("");
+    const [reflectionIndex, setReflectionIndex] = useState(0);
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    const [showAnswerFeedback, setShowAnswerFeedback] = useState(false);
+    const [reflectionStars, setReflectionStars] = useState(0);
+    const shuffleArray = (arr) => {
+      return [...arr].sort(() => Math.random() - 0.5);
+    };
+    useEffect(() => {
+      setScrambledStages(shuffleArray(STAGES_DATA));
+    }, []);
+    const handleStageClick = (stage) => {
+      triggerSound("click");
+      const emptyIndex = placedSlots.findIndex((slot) => slot === null);
+      if (emptyIndex === -1) return;
+      const updatedSlots = [...placedSlots];
+      updatedSlots[emptyIndex] = stage;
+      setPlacedSlots(updatedSlots);
+      setScrambledStages((prev) => prev.filter((s) => s.id !== stage.id));
+      setGame1Error("");
+    };
+    const handleRemoveFromSlot = (index) => {
+      const stageToRemove = placedSlots[index];
+      if (!stageToRemove) return;
+      triggerSound("click");
+      const updatedSlots = [...placedSlots];
+      updatedSlots[index] = null;
+      setPlacedSlots(updatedSlots);
+      setScrambledStages((prev) => [...prev, stageToRemove]);
+      setGame1Completed(false);
+      setGame1Error("");
+    };
+    const verifyGame1Sequence = () => {
+      const isAnyEmpty = placedSlots.some((slot) => slot === null);
+      if (isAnyEmpty) {
+        triggerSound("fail");
+        setGame1Error("\u0627\u0644\u0631\u062C\u0627\u0621 \u0633\u062D\u0628 \u0623\u0648 \u0648\u0636\u0639 \u062C\u0645\u064A\u0639 \u0627\u0644\u0628\u0637\u0627\u0642\u0627\u062A \u0627\u0644\u0623\u0631\u0628\u0639\u0629 \u0623\u0648\u0644\u0627\u064B \u0644\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u062A\u0631\u062A\u064A\u0628!");
+        return;
+      }
+      const isCorrect = placedSlots.every((slot, index) => slot.id === index + 1);
+      if (isCorrect) {
+        triggerSound("success");
+        setGame1Completed(true);
+        setGame1Error("");
+        setScore((prev) => prev + 15);
+      } else {
+        triggerSound("fail");
+        setGame1Error("\u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u063A\u064A\u0631 \u062F\u0642\u064A\u0642 \u062A\u0645\u0627\u0645\u0627\u064B! \u062A\u0630\u0643\u0631 \u062C\u064A\u062F\u0627\u064B: \u0643\u064A\u0641 \u062A\u0628\u062F\u0623 \u0627\u0644\u0646\u062D\u0644\u0629 \u0628\u0627\u0644\u0632\u0647\u0631\u0629 \u062B\u0645 \u062A\u0639\u0648\u062F \u0644\u0644\u062E\u0644\u064A\u0629 \u0644\u062A\u0635\u0646\u0639 \u0627\u0644\u0639\u0633\u0644 \u0648\u062A\u062E\u0632\u0646\u0647. \u0627\u0636\u063A\u0637 \u0639\u0644\u0649 \u0623\u064A \u0628\u0637\u0627\u0642\u0629 \u062E\u0627\u0637\u0626\u0629 \u0644\u0625\u0632\u0627\u0644\u062A\u0647\u0627 \u0648\u062A\u0639\u062F\u064A\u0644\u0647\u0627.");
+      }
+    };
+    const resetGame1 = () => {
+      triggerSound("click");
+      setScrambledStages(shuffleArray(STAGES_DATA));
+      setPlacedSlots([null, null, null, null]);
+      setGame1Error("");
+      setGame1Completed(false);
+    };
+    const handleSelectRole = (role) => {
+      triggerSound("click");
+      setSelectedRole(role);
+      setGame2Error("");
+    };
+    const handleSelectJob = (job) => {
+      if (!selectedRole) {
+        triggerSound("fail");
+        setGame2Error("\u0627\u062E\u062A\u0631 \u0623\u062D\u062F \u0623\u0641\u0631\u0627\u062F \u0639\u0627\u0626\u0644\u0629 \u0627\u0644\u0646\u062D\u0644 \u0623\u0648\u0644\u0627\u064B \u0645\u0646 \u0627\u0644\u064A\u0645\u064A\u0646 (\u0627\u0644\u0645\u0644\u0643\u0629 \u0623\u0648 \u0627\u0644\u0639\u0627\u0645\u0644\u0629 \u0623\u0648 \u0627\u0644\u0630\u0643\u0631)\u060C \u062B\u0645 \u062D\u062F\u062F \u0645\u0647\u0645\u062A\u0647 \u0627\u0644\u0645\u0646\u0627\u0633\u0628\u0629!");
+        return;
+      }
+      triggerSound("click");
+      if (selectedRole.job === job) {
+        triggerSound("success");
+        setMatchedJobs((prev) => __spreadProps(__spreadValues({}, prev), {
+          [selectedRole.role]: job
+        }));
+        setScore((prev) => prev + 10);
+        setSelectedRole(null);
+        setGame2Error("");
+      } else {
+        triggerSound("fail");
+        setGame2Error(`\u0645\u0645\u0645... \u0647\u0644 \u0623\u0646\u062A \u0645\u062A\u0623\u0643\u062F \u0623\u0646 \u0647\u0630\u0647 \u0647\u064A \u0627\u0644\u0645\u0647\u0645\u0629 \u0627\u0644\u0635\u062D\u064A\u062D\u0629 \u0644\u0640 (${selectedRole.role})\u061F \u0641\u0643\u0631 \u062C\u064A\u062F\u0627\u064B \u0648\u0623\u0639\u062F \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629!`);
+      }
+    };
+    const game2Completed = Object.keys(matchedJobs).length === JOBS_DATA.length;
+    const resetGame2 = () => {
+      triggerSound("click");
+      setMatchedJobs({});
+      setSelectedRole(null);
+      setGame2Error("");
+    };
+    const randomizedJobsList = useMemo(() => {
+      return shuffleArray(JOBS_DATA.map((j) => j.job));
+    }, []);
+    const currentPrompt = REFLECTION_PROMPTS[reflectionIndex];
+    const currentOptions = useMemo(() => {
+      return shuffleArray(currentPrompt.options);
+    }, [reflectionIndex]);
+    const handleAnswerSelection = (option) => {
+      if (showAnswerFeedback) return;
+      setSelectedAnswer(option);
+      setShowAnswerFeedback(true);
+      if (option === currentPrompt.correct) {
+        triggerSound("success");
+        setReflectionStars((prev) => prev + 1);
+        setScore((prev) => prev + 20);
+      } else {
+        triggerSound("fail");
+      }
+    };
+    const handleNextReflection = () => {
+      triggerSound("click");
+      setSelectedAnswer(null);
+      setShowAnswerFeedback(false);
+      if (reflectionIndex < REFLECTION_PROMPTS.length - 1) {
+        setReflectionIndex((prev) => prev + 1);
+      } else {
+        triggerSound("victory");
+        setCurrentStep("celebrate");
+      }
+    };
+    const resetWholeAdventure = () => {
+      triggerSound("click");
+      setScore(0);
+      resetGame1();
+      resetGame2();
+      setReflectionIndex(0);
+      setSelectedAnswer(null);
+      setShowAnswerFeedback(false);
+      setReflectionStars(0);
+      setCurrentStep("welcome");
+    };
+    return /* @__PURE__ */ React.createElement(
+      "div",
+      {
+        className: "bee-game-root bg-gradient-to-b from-[#FFFDF0] via-[#FFF7D1] to-[#FEF3A8] font-sans antialiased text-[#451A03]",
+        dir: "rtl"
+      },
+      /* @__PURE__ */ React.createElement("header", { className: "ios-safe-top sticky top-0 z-30 bg-white/92 backdrop-blur-md border-b-2 border-amber-200 px-3 py-3 shadow-md sm:px-4" }, /* @__PURE__ */ React.createElement("div", { className: "max-w-6xl mx-auto flex items-center justify-between" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 sm:gap-3" }, /* @__PURE__ */ React.createElement("span", { className: "text-3xl sm:text-4xl animate-float-bee inline-block" }, "\u{1F41D}"), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h1", { className: "text-lg sm:text-2xl font-black text-amber-950" }, "\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0646\u062D\u0644 \u0627\u0644\u062A\u0641\u0627\u0639\u0644\u064A\u0629"), /* @__PURE__ */ React.createElement("p", { className: "text-[10px] sm:text-xs text-amber-800 font-bold hidden sm:block" }, "\u0631\u062D\u0644\u0629 \u0627\u0644\u062A\u0639\u0644\u0651\u0645 \u0627\u0644\u0639\u0627\u0626\u0644\u064A\u0629 \u0627\u0644\u0645\u062A\u0645\u064A\u0632\u0629 - \u0645\u0647\u0627\u0631\u0627\u062A \u0627\u0644\u0628\u0643\u0627\u0644\u0648\u0631\u064A\u0627 \u0627\u0644\u062F\u0648\u0644\u064A\u0629 (PYP)"))), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ React.createElement("div", { className: "bg-amber-100 border-2 border-amber-400 rounded-full px-3 sm:px-4 py-1.5 flex items-center gap-1 shadow-inner" }, /* @__PURE__ */ React.createElement("span", { className: "text-xs sm:text-sm font-black text-amber-950" }, "\u0627\u0644\u0646\u0642\u0627\u0637:"), /* @__PURE__ */ React.createElement("span", { className: "text-sm sm:text-base font-black text-[#EA580C]" }, score, " \u2B50")), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-1.5" }, /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => {
+            setIsMuted(!isMuted);
+            if (isMuted) triggerSound("click");
+          },
+          className: `p-2 rounded-full border-2 transition-transform active:scale-95 ${isMuted ? "bg-rose-50 border-rose-400 text-rose-500" : "bg-amber-50 border-amber-400 text-amber-700"}`,
+          title: isMuted ? "\u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0635\u0648\u062A" : "\u0643\u062A\u0645 \u0627\u0644\u0635\u0648\u062A"
+        },
+        isMuted ? /* @__PURE__ */ React.createElement("svg", { className: "w-5 h-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" }, /* @__PURE__ */ React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2.5, d: "M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .9-1.077 1.337-1.707.707L5.586 15z" }), /* @__PURE__ */ React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2.5, d: "M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" })) : /* @__PURE__ */ React.createElement("svg", { className: "w-5 h-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" }, /* @__PURE__ */ React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2.5, d: "M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .9-1.077 1.337-1.707.707L5.586 15z" }))
+      ), !safariAudioUnlocked && /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: unlockSafariAudio,
+          className: "bee-button bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[10px] sm:text-xs px-2 sm:px-3 py-2 rounded-full shadow-md active:scale-95 transition-all"
+        },
+        "\u{1F50A} \u062A\u0646\u0634\u064A\u0637 \u0627\u0644\u0635\u0648\u062A"
+      )))), /* @__PURE__ */ React.createElement("div", { className: "max-w-6xl mx-auto text-center text-[9px] sm:text-[11px] text-amber-900 font-bold opacity-80 mt-1" }, "\u{1F4A1} \u0644\u0645\u0633\u062A\u062E\u062F\u0645\u064A \u0622\u064A\u0641\u0648\u0646 \u0648\u0622\u064A\u0628\u0627\u062F: \u062A\u0623\u0643\u062F \u0645\u0646 \u0625\u064A\u0642\u0627\u0641 \u0645\u0641\u062A\u0627\u062D \u0627\u0644\u0635\u0627\u0645\u062A \u0627\u0644\u062C\u0627\u0646\u0628\u064A \u0644\u062A\u0633\u062A\u0645\u062A\u0639 \u0628\u0627\u0644\u0645\u0624\u062B\u0631\u0627\u062A \u0627\u0644\u0635\u0648\u062A\u064A\u0629 \u0627\u0644\u0634\u0642\u064A\u0629!")),
+      /* @__PURE__ */ React.createElement("main", { className: "mx-auto mt-5 max-w-6xl px-3 sm:mt-6 sm:px-4" }, currentStep === "welcome" && /* @__PURE__ */ React.createElement("div", { className: "bg-white rounded-[2.5rem] shadow-xl border-4 border-amber-400 overflow-hidden relative" }, /* @__PURE__ */ React.createElement("div", { className: "p-6 sm:p-12 text-center relative" }, /* @__PURE__ */ React.createElement("div", { className: "absolute top-10 left-10 animate-float-bee hidden md:block" }, /* @__PURE__ */ React.createElement(BeeSvg, { kind: "worker", className: "h-20 w-20" })), /* @__PURE__ */ React.createElement("div", { className: "absolute bottom-10 right-10 animate-float-bee hidden md:block", style: { animationDelay: "1s" } }, /* @__PURE__ */ React.createElement(BeeSvg, { kind: "queen", className: "h-24 w-24" })), /* @__PURE__ */ React.createElement("div", { className: "max-w-2xl mx-auto space-y-6 z-10 relative" }, /* @__PURE__ */ React.createElement("span", { className: "bg-amber-100 text-amber-950 text-xs sm:text-sm font-black px-4 py-2 rounded-full inline-block border border-amber-300" }, '\u0645\u0633\u062A\u0648\u062D\u0649 \u0645\u0646 \u062F\u0631\u0633 \u0627\u0644\u0642\u0631\u0627\u0621\u0629 \u0627\u0644\u0634\u064A\u0642 \u0648\u0627\u0644\u0645\u0645\u062A\u0639: "\u0645\u0645\u0644\u0643\u0629 \u0639\u062C\u064A\u0628\u0629" \u{1F4D6}'), /* @__PURE__ */ React.createElement("h2", { className: "text-4xl sm:text-6xl font-black text-amber-950 leading-tight" }, "\u0645\u063A\u0627\u0645\u0631\u0629 ", /* @__PURE__ */ React.createElement("span", { className: "text-amber-500 underline decoration-wavy decoration-yellow-400" }, "\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0646\u062D\u0644"), " \u0627\u0644\u0645\u0630\u0647\u0644\u0629!"), /* @__PURE__ */ React.createElement("p", { className: "text-base sm:text-xl text-amber-900 font-black leading-relaxed" }, "\u0623\u0647\u0644\u0627\u064B \u0628\u0643 \u064A\u0627 \u0628\u0637\u0644 \u0627\u0644\u0645\u0633\u062A\u0642\u0628\u0644 \u0627\u0644\u0631\u0627\u0626\u0639 \u0645\u0639 \u0648\u0644\u064A \u0623\u0645\u0631\u0643! \u0647\u064A\u0627 \u0628\u0646\u0627 \u0645\u0639\u0627\u064B \u0644\u0646\u0641\u0643 \u0634\u064A\u0641\u0631\u0629 \u062E\u0644\u064A\u0629 \u0627\u0644\u0646\u062D\u0644\u060C \u0648\u0646\u0631\u062A\u0628 \u0627\u0644\u0645\u0647\u0627\u0645 \u0628\u0630\u0643\u0627\u0621\u060C \u0648\u0646\u0641\u0643\u0631 \u0643\u0639\u0644\u0645\u0627\u0621 \u0645\u062A\u0645\u064A\u0632\u064A\u0646 \u0639\u0628\u0631 \u062B\u0644\u0627\u062B \u0645\u0631\u0627\u062D\u0644 \u062A\u0641\u0627\u0639\u0644\u064A\u0629 \u0648\u0645\u0631\u062D\u0629!"), /* @__PURE__ */ React.createElement("div", { className: "bg-yellow-50 border-2 border-dashed border-amber-400 rounded-3xl p-5 sm:p-7 text-right shadow-inner" }, /* @__PURE__ */ React.createElement("h4", { className: "font-black text-amber-950 text-lg flex items-center gap-2 mb-3" }, /* @__PURE__ */ React.createElement("span", null, "\u{1F468}\u200D\u{1F469}\u200D\u{1F467}\u200D\u{1F466}"), " \u0625\u0631\u0634\u0627\u062F\u0627\u062A \u0627\u0644\u0634\u0631\u0627\u0643\u0629 \u0627\u0644\u062A\u0631\u0628\u0648\u064A\u0629 \u0644\u0648\u0644\u064A \u0627\u0644\u0623\u0645\u0631:"), /* @__PURE__ */ React.createElement("p", { className: "text-xs sm:text-sm text-amber-900 leading-relaxed font-bold" }, "\u0647\u0630\u0647 \u0627\u0644\u0644\u0639\u0628\u0629 \u0627\u0644\u062A\u0641\u0627\u0639\u0644\u064A\u0629 \u062A\u0645 \u062A\u0635\u0645\u064A\u0645\u0647\u0627 \u0644\u062A\u0639\u0645\u0644 \u062C\u0646\u0628\u0627\u064B \u0625\u0644\u0649 \u062C\u0646\u0628 \u0645\u0639 \u0637\u0641\u0644\u0643 \u0641\u064A \u0627\u0644\u0645\u0646\u0632\u0644. \u0633\u062A\u062C\u062F \u0641\u064A \u0643\u0644 \u0645\u0631\u062D\u0644\u0629 \u0623\u0633\u0626\u0644\u0629 \u0648\u062D\u0648\u0627\u0631\u0627\u062A \u062A\u0623\u0645\u0644\u064A\u0629 (ATL) \u062A\u0633\u0627\u0639\u062F\u0647 \u0639\u0644\u0649 \u0627\u0644\u0631\u0628\u0637 \u0627\u0644\u0633\u0644\u064A\u0645 \u0628\u064A\u0646 \u0642\u064A\u0645 \u0627\u0644\u062A\u0639\u0627\u0648\u0646 \u0648\u0627\u0644\u0646\u0638\u0627\u0645 \u062F\u0627\u062E\u0644 \u0627\u0644\u062E\u0644\u064A\u0629 \u0648\u0628\u064A\u0646 \u062D\u064A\u0627\u062A\u0647 \u0627\u0644\u064A\u0648\u0645\u064A\u0629 \u0648\u063A\u0631\u0641\u062A\u0647 \u0648\u062F\u0631\u0627\u0633\u062A\u0647.")), /* @__PURE__ */ React.createElement("div", { className: "pt-4" }, /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: async () => {
+            await unlockSafariAudio();
+            triggerSound("click");
+            setCurrentStep("game1");
+          },
+          className: "bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black text-xl sm:text-2xl px-12 py-5 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 border-b-4 border-amber-700"
+        },
+        "\u0627\u0628\u062F\u0623 \u0627\u0644\u0645\u063A\u0627\u0645\u0631\u0629 \u0648\u0627\u0644\u062A\u0639\u0644\u0645 \u0627\u0644\u0622\u0646 \u{1F3C1}"
+      ))), /* @__PURE__ */ React.createElement("div", { className: "mt-12 flex justify-center gap-8 opacity-90 border-t border-amber-100 pt-8" }, /* @__PURE__ */ React.createElement(FlowerSvg, { className: "h-16 w-16" }), /* @__PURE__ */ React.createElement(HiveSvg, { className: "h-16 w-16" }), /* @__PURE__ */ React.createElement(HoneySvg, { className: "h-16 w-16" })))), currentStep === "game1" && /* @__PURE__ */ React.createElement("div", { className: "space-y-6" }, /* @__PURE__ */ React.createElement("div", { className: "bg-white rounded-3xl p-4 shadow-md border-2 border-amber-100 flex flex-wrap gap-4 items-center justify-between" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("span", { className: "text-xs font-black text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200" }, "\u0627\u0644\u0645\u0631\u062D\u0644\u0629 \u0627\u0644\u0623\u0648\u0644\u0649 \u0645\u0646 3"), /* @__PURE__ */ React.createElement("h3", { className: "text-lg sm:text-xl font-black text-amber-950 mt-1" }, "\u062F\u0648\u0631\u0629 \u062D\u064A\u0627\u0629 \u0648\u0639\u0645\u0644 \u0627\u0644\u0646\u062D\u0644\u0629 \u0627\u0644\u0643\u0627\u062F\u062D\u0629 \u{1F504}")), /* @__PURE__ */ React.createElement("div", { className: "flex gap-2" }, /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-10 rounded-full bg-amber-500 animate-pulse" }), /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-3.5 rounded-full bg-amber-200" }), /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-3.5 rounded-full bg-amber-200" }))), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-6" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-8 bg-white rounded-[2rem] p-5 sm:p-7 shadow-xl border-2 border-amber-300 space-y-6" }, /* @__PURE__ */ React.createElement("div", { className: "text-right" }, /* @__PURE__ */ React.createElement("h4", { className: "text-lg font-black text-amber-950" }, "\u0631\u062A\u0651\u0628 \u0627\u0644\u062E\u0637\u0648\u0627\u062A \u0627\u0644\u0623\u0631\u0628\u0639\u0629 \u0628\u0634\u0643\u0644 \u0645\u062A\u0633\u0644\u0633\u0644 \u0644\u062A\u0635\u0646\u0639 \u0627\u0644\u0646\u062D\u0644\u0629 \u0627\u0644\u0639\u0633\u0644:"), /* @__PURE__ */ React.createElement("p", { className: "text-xs sm:text-sm text-amber-800 font-bold mt-1" }, "\u0627\u0646\u0642\u0631 \u0639\u0644\u0649 \u0628\u0637\u0627\u0642\u0627\u062A \u0627\u0644\u0645\u0631\u0627\u062D\u0644 \u0627\u0644\u0645\u062A\u0627\u062D\u0629 \u0628\u0627\u0644\u0623\u0633\u0641\u0644 \u0644\u062A\u062F\u062E\u0644\u0647\u0627 \u0641\u064A \u062E\u0644\u0627\u064A\u0627 \u0623\u0642\u0631\u0627\u0635 \u0627\u0644\u0639\u0633\u0644 \u0628\u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u0627\u0644\u0635\u062D\u064A\u062D.")), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4" }, placedSlots.map((slot, idx) => /* @__PURE__ */ React.createElement(
+        "div",
+        {
+          key: idx,
+          className: "relative flex flex-col items-center justify-between p-4 min-h-[220px] rounded-3xl border-2 border-dashed border-amber-400 bg-amber-50/50 hover:bg-amber-50 transition-all shadow-inner"
+        },
+        /* @__PURE__ */ React.createElement("div", { className: "absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full" }, "\u0627\u0644\u062E\u0637\u0648\u0629 ", idx + 1),
+        slot ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "my-auto flex flex-col items-center" }, /* @__PURE__ */ React.createElement(ArtworkSelector, { type: slot.type, className: "h-24 w-24 transform scale-90" }), /* @__PURE__ */ React.createElement("span", { className: "text-xs sm:text-sm font-black text-amber-950 text-center mt-2 px-1" }, slot.text)), /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            onClick: () => handleRemoveFromSlot(idx),
+            className: "mt-2 text-xs font-black text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-1.5 rounded-full border border-rose-200 transition-colors"
+          },
+          "\u274C \u0625\u0644\u063A\u0627\u0621 \u0627\u0644\u0648\u0636\u0639"
+        )) : /* @__PURE__ */ React.createElement("div", { className: "my-auto text-center text-amber-400" }, /* @__PURE__ */ React.createElement("span", { className: "text-4xl block mb-2 opacity-50" }, "\u{1F36F}"), /* @__PURE__ */ React.createElement("span", { className: "text-xs font-black block" }, "\u062E\u0644\u064A\u0629 \u0641\u0627\u0631\u063A\u0629"))
+      ))), /* @__PURE__ */ React.createElement("div", { className: "border-t-2 border-amber-100 pt-6 space-y-3" }, /* @__PURE__ */ React.createElement("h5", { className: "text-xs sm:text-sm font-black text-amber-950 bg-amber-100 px-3 py-1 rounded-full inline-block" }, "\u0627\u0644\u0628\u0637\u0627\u0642\u0627\u062A \u0627\u0644\u0645\u062A\u0627\u062D\u0629 (\u0627\u0646\u0642\u0631 \u0644\u0644\u0648\u0636\u0639):"), scrambledStages.length === 0 && !game1Completed ? /* @__PURE__ */ React.createElement("div", { className: "text-center py-4 text-emerald-700 font-black bg-emerald-50 rounded-2xl border border-emerald-300" }, "\u{1F389} \u0645\u0630\u0647\u0644! \u0642\u0645\u062A \u0628\u0645\u0644\u0621 \u0643\u0644 \u0641\u0631\u0627\u063A\u0627\u062A \u0627\u0644\u062E\u0644\u0627\u064A\u0627\u060C \u0627\u0636\u063A\u0637 \u0639\u0644\u0649 \u0632\u0631 \u0627\u0644\u062A\u062D\u0642\u0642 \u0644\u0645\u0639\u0631\u0641\u0629 \u0627\u0644\u0646\u062A\u064A\u062C\u0629!") : /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-3" }, scrambledStages.map((stage) => /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: stage.id,
+          onClick: () => handleStageClick(stage),
+          className: "flex flex-col items-center p-3 rounded-2xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/20 to-amber-100/30 hover:bg-yellow-100 hover:border-amber-400 active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg"
+        },
+        /* @__PURE__ */ React.createElement(ArtworkSelector, { type: stage.type, className: "h-16 w-16" }),
+        /* @__PURE__ */ React.createElement("span", { className: "text-xs font-black text-amber-950 text-center mt-2 leading-snug" }, stage.text)
+      )))), game1Error && /* @__PURE__ */ React.createElement("div", { className: "bg-rose-50 border-r-4 border-rose-500 text-rose-900 p-4 rounded-2xl text-xs sm:text-sm font-black" }, "\u26A0\uFE0F ", game1Error), game1Completed && /* @__PURE__ */ React.createElement("div", { className: "bg-emerald-50 border-r-4 border-emerald-500 text-emerald-950 p-5 rounded-2xl space-y-2 border border-emerald-200" }, /* @__PURE__ */ React.createElement("p", { className: "font-black text-lg text-emerald-800" }, "\u{1F389} \u0631\u0627\u0626\u0639 \u062C\u062F\u0627\u064B! \u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u0635\u062D\u064A\u062D \u0648\u0645\u0643\u062A\u0645\u0644 \u0628\u0646\u062C\u0627\u062D (15+ \u0646\u0642\u0637\u0629) \u2B50"), /* @__PURE__ */ React.createElement("p", { className: "text-xs sm:text-sm font-bold text-emerald-900 leading-relaxed" }, "\u062A\u0628\u062F\u0623 \u0631\u062D\u0644\u0629 \u0627\u0644\u0639\u0633\u0644 \u062F\u0627\u0626\u0645\u0627\u064B \u0628\u062C\u0645\u0639 \u0627\u0644\u0631\u062D\u064A\u0642 \u0645\u0646 \u0627\u0644\u0623\u0632\u0647\u0627\u0631 \u0627\u0644\u0645\u0644\u0648\u0646\u0629\u060C \u062B\u0645 \u062A\u0637\u064A\u0631 \u0627\u0644\u0646\u062D\u0644\u0629 \u0639\u0627\u0626\u062F\u0629 \u0628\u0646\u0634\u0627\u0637 \u0644\u0644\u062E\u0644\u064A\u0629\u060C \u0648\u0628\u0639\u062F\u0647\u0627 \u062A\u0635\u0646\u0639 \u0627\u0644\u0639\u0633\u0644 \u0627\u0644\u0634\u0647\u064A\u060C \u0648\u0641\u064A \u0627\u0644\u0646\u0647\u0627\u064A\u0629 \u062A\u062E\u0632\u0646\u0647 \u0641\u064A \u0642\u0631\u0635 \u0627\u0644\u0634\u0645\u0639 \u0644\u0644\u0634\u062A\u0627\u0621.")), /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-3 justify-end pt-4" }, /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: resetGame1,
+          className: "bee-button px-5 py-3 rounded-full border-2 border-amber-300 text-amber-950 font-black text-xs sm:text-sm hover:bg-amber-100 active:scale-95 transition-all"
+        },
+        "\u{1F504} \u0625\u0639\u0627\u062F\u0629 \u062A\u0631\u062A\u064A\u0628 \u0627\u0644\u0628\u0637\u0627\u0642\u0627\u062A"
+      ), !game1Completed ? /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: verifyGame1Sequence,
+          className: "bee-button px-8 py-3 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-black text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all border-b-4 border-amber-700"
+        },
+        "\u{1F50D} \u062A\u062D\u0642\u0642 \u0645\u0646 \u0635\u062D\u0629 \u0627\u0644\u062A\u0631\u062A\u064A\u0628"
+      ) : /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => {
+            triggerSound("click");
+            setCurrentStep("game2");
+          },
+          className: "px-8 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs sm:text-sm shadow-md active:scale-95 transition-all border-b-4 border-emerald-700"
+        },
+        "\u062A\u0627\u0628\u0639 \u0644\u0644\u0645\u0631\u062D\u0644\u0629 \u0627\u0644\u062B\u0627\u0646\u064A\u0629 \u27A1\uFE0F"
+      ))), /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-4 space-y-4" }, /* @__PURE__ */ React.createElement("div", { className: "bg-amber-50 rounded-[2rem] p-5 sm:p-6 border-2 border-amber-200 space-y-4 shadow-sm" }, /* @__PURE__ */ React.createElement("h4", { className: "font-black text-amber-950 flex items-center gap-2 text-base" }, /* @__PURE__ */ React.createElement("span", null, "\u{1F4A1}"), " \u062D\u0648\u0627\u0631 \u0648\u0644\u064A \u0627\u0644\u0623\u0645\u0631 \u0641\u064A \u0647\u0630\u0647 \u0627\u0644\u0645\u0631\u062D\u0644\u0629:"), /* @__PURE__ */ React.createElement("ul", { className: "text-xs sm:text-sm text-amber-900 space-y-3 leading-relaxed list-disc list-inside font-bold" }, /* @__PURE__ */ React.createElement("li", null, "\u0633\u0627\u0639\u062F \u0637\u0641\u0644\u0643 \u0641\u064A \u0646\u0637\u0642 \u0623\u0633\u0645\u0627\u0621 \u0647\u0630\u0647 \u0627\u0644\u0645\u0631\u0627\u062D\u0644 \u0628\u0627\u0644\u0644\u063A\u0629 \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0641\u0635\u062D\u0649 \u0628\u0635\u0648\u062A \u0645\u0628\u0647\u062C."), /* @__PURE__ */ React.createElement("li", null, "\u0627\u0633\u0623\u0644\u0647 \u0628\u0630\u0643\u0627\u0621: ", /* @__PURE__ */ React.createElement("span", { className: "text-[#EA580C]" }, '"\u0644\u0645\u0627\u0630\u0627 \u0644\u0627 \u062A\u0628\u062F\u0623 \u0627\u0644\u0646\u062D\u0644\u0629 \u0628\u062A\u062E\u0632\u064A\u0646 \u0627\u0644\u0639\u0633\u0644 \u0642\u0628\u0644 \u062C\u0645\u0639 \u0627\u0644\u0631\u062D\u064A\u0642\u061F"'), " \u0644\u064A\u062F\u0631\u0643 \u062A\u0633\u0644\u0633\u0644 \u0627\u0644\u0623\u0633\u0628\u0627\u0628 \u0648\u0627\u0644\u0646\u062A\u0627\u0626\u062C \u0645\u0646\u0637\u0642\u064A\u064B\u0627.")), /* @__PURE__ */ React.createElement("div", { className: "bg-white/90 p-3.5 rounded-2xl text-[11px] sm:text-xs font-black text-amber-950 border border-amber-100" }, "\u{1F4A1} ", /* @__PURE__ */ React.createElement("span", { className: "font-black text-amber-600" }, "\u0645\u0641\u0647\u0648\u0645 \u0627\u0644\u0628\u062D\u062B:"), " \u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u0648\u0627\u0644\u062A\u0633\u0644\u0633\u0644 \u0627\u0644\u0635\u062D\u064A\u062D \u0647\u0645\u0627 \u0623\u0633\u0627\u0633 \u0627\u0644\u0646\u062C\u0627\u062D \u0641\u064A \u0639\u0645\u0644 \u0623\u064A \u0641\u0631\u064A\u0642."))))), currentStep === "game2" && /* @__PURE__ */ React.createElement("div", { className: "space-y-6" }, /* @__PURE__ */ React.createElement("div", { className: "bg-white rounded-3xl p-4 shadow-md border-2 border-amber-100 flex flex-wrap gap-4 items-center justify-between" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("span", { className: "text-xs font-black text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200" }, "\u0627\u0644\u0645\u0631\u062D\u0644\u0629 \u0627\u0644\u062B\u0627\u0646\u064A\u0629 \u0645\u0646 3"), /* @__PURE__ */ React.createElement("h3", { className: "text-lg sm:text-xl font-black text-amber-950 mt-1" }, "\u062A\u0648\u0632\u064A\u0639 \u0627\u0644\u0645\u0647\u0627\u0645: \u0645\u0646 \u0627\u0644\u0645\u0633\u0624\u0648\u0644 \u0639\u0646 \u0647\u0630\u0627 \u0627\u0644\u0639\u0645\u0644\u061F \u{1F4CB}")), /* @__PURE__ */ React.createElement("div", { className: "flex gap-2" }, /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-3.5 rounded-full bg-amber-200" }), /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-10 rounded-full bg-amber-500 animate-pulse" }), /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-3.5 rounded-full bg-amber-200" }))), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-6" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-8 bg-white rounded-[2rem] p-5 sm:p-7 shadow-xl border-2 border-amber-300 space-y-6" }, /* @__PURE__ */ React.createElement("div", { className: "text-right" }, /* @__PURE__ */ React.createElement("h4", { className: "text-lg font-black text-amber-950" }, "\u0637\u0631\u064A\u0642\u0629 \u0645\u0637\u0627\u0628\u0642\u0629 \u0627\u0644\u0623\u062F\u0648\u0627\u0631:"), /* @__PURE__ */ React.createElement("p", { className: "text-xs sm:text-sm text-amber-800 font-bold mt-1" }, "1. \u0627\u0646\u0642\u0631 \u0623\u0648\u0644\u0627\u064B \u0639\u0644\u0649 \u0623\u062D\u062F \u0623\u0641\u0631\u0627\u062F \u0639\u0627\u0626\u0644\u0629 \u0627\u0644\u0646\u062D\u0644 \u0641\u064A \u0627\u0644\u064A\u0645\u064A\u0646 (\u0633\u064A\u0636\u064A\u0621 \u0625\u0637\u0627\u0631 \u0627\u0644\u0646\u062D\u0644\u0629 \u0627\u0644\u0645\u062D\u062F\u062F\u0629). ", /* @__PURE__ */ React.createElement("br", null), "2. \u062B\u0645 \u0627\u0646\u0642\u0631 \u0639\u0644\u0649 \u0627\u0644\u0645\u0647\u0645\u0629 \u0648\u0627\u0644\u0645\u0633\u0624\u0648\u0644\u064A\u0629 \u0627\u0644\u0645\u0646\u0627\u0633\u0628\u0629 \u0644\u0647 \u0641\u064A \u0627\u0644\u064A\u0633\u0627\u0631 \u0644\u064A\u062A\u0645 \u0627\u0644\u0631\u0628\u0637 \u0648\u0627\u0644\u0645\u0637\u0627\u0628\u0642\u0629!")), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-12 gap-6" }, /* @__PURE__ */ React.createElement("div", { className: "md:col-span-5 space-y-3" }, /* @__PURE__ */ React.createElement("h5", { className: "text-xs font-black text-amber-800 bg-amber-100 px-3 py-1 rounded-full inline-block mb-1 text-center" }, "\u0639\u0627\u0626\u0644\u0629 \u0627\u0644\u062E\u0644\u064A\u0629 \u0627\u0644\u0639\u062C\u064A\u0628\u0629:"), JOBS_DATA.map((bee) => {
+        const isSelected = (selectedRole == null ? void 0 : selectedRole.role) === bee.role;
+        const hasMatched = matchedJobs[bee.role];
+        return /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            key: bee.role,
+            onClick: () => !hasMatched && handleSelectRole(bee),
+            disabled: !!hasMatched,
+            className: `w-full flex items-center gap-3 p-3 rounded-2xl border-2 transition-all text-right ${hasMatched ? "bg-emerald-50 border-emerald-300 opacity-75 cursor-not-allowed" : isSelected ? "bg-amber-100 border-amber-500 ring-4 ring-amber-300 scale-[1.02] shadow-md" : "bg-white border-amber-200 hover:border-amber-400"}`
+          },
+          /* @__PURE__ */ React.createElement(BeeSvg, { kind: bee.type, className: "h-14 w-14 flex-shrink-0" }),
+          /* @__PURE__ */ React.createElement("div", { className: "flex-grow" }, /* @__PURE__ */ React.createElement("span", { className: "block text-base font-black text-amber-950" }, bee.role), /* @__PURE__ */ React.createElement("span", { className: "block text-[11px] font-bold text-amber-800" }, hasMatched ? "\u2705 \u062A\u0645 \u0627\u0643\u062A\u0634\u0627\u0641 \u0648\u0638\u064A\u0641\u062A\u0647\u0627" : "\u{1F50E} \u0627\u0646\u0642\u0631 \u0644\u0644\u0645\u0637\u0627\u0628\u0642\u0629 \u0627\u0644\u0622\u0646"))
+        );
+      })), /* @__PURE__ */ React.createElement("div", { className: "hidden md:flex md:col-span-2 items-center justify-center" }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-6 text-amber-400 text-3xl font-black" }, /* @__PURE__ */ React.createElement("span", null, "\u26A1"), /* @__PURE__ */ React.createElement("span", null, "\u{1F41D}"), /* @__PURE__ */ React.createElement("span", null, "\u26A1"))), /* @__PURE__ */ React.createElement("div", { className: "md:col-span-5 space-y-3" }, /* @__PURE__ */ React.createElement("h5", { className: "text-xs font-black text-amber-800 bg-amber-100 px-3 py-1 rounded-full inline-block mb-1 text-center" }, "\u0627\u0644\u0648\u0638\u0627\u0626\u0641 \u0648\u0627\u0644\u0645\u0633\u0624\u0648\u0644\u064A\u0627\u062A:"), randomizedJobsList.map((jobText) => {
+        var _a;
+        const owningRole = (_a = JOBS_DATA.find((j) => j.job === jobText)) == null ? void 0 : _a.role;
+        const isMatched = Object.values(matchedJobs).includes(jobText);
+        return /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            key: jobText,
+            onClick: () => !isMatched && handleSelectJob(jobText),
+            disabled: isMatched,
+            className: `w-full text-right p-4 rounded-2xl border-2 text-xs sm:text-sm font-black transition-all min-h-[72px] flex items-center ${isMatched ? "bg-emerald-100 border-emerald-400 text-emerald-950 font-black cursor-not-allowed shadow-inner" : "bg-amber-50/50 border-amber-200 text-amber-950 hover:bg-amber-100/50 hover:border-amber-400 active:scale-[0.98] shadow-sm"}`
+          },
+          /* @__PURE__ */ React.createElement("div", null, isMatched && /* @__PURE__ */ React.createElement("span", { className: "text-emerald-700 font-black block text-[10px] mb-1" }, "\u2713 \u062E\u064F\u0635\u0635\u062A \u0628\u0646\u062C\u0627\u062D \u0644\u0640 (", owningRole, ")"), /* @__PURE__ */ React.createElement("span", null, jobText))
+        );
+      }))), game2Error && /* @__PURE__ */ React.createElement("div", { className: "bg-amber-50 border-r-4 border-amber-500 text-amber-950 p-4 rounded-2xl text-xs sm:text-sm font-black border border-amber-200" }, "\u{1F4A1} ", game2Error), game2Completed && /* @__PURE__ */ React.createElement("div", { className: "bg-emerald-50 border-r-4 border-emerald-500 text-emerald-950 p-5 rounded-2xl space-y-2 border border-emerald-200" }, /* @__PURE__ */ React.createElement("p", { className: "font-black text-lg text-emerald-800" }, "\u{1F396}\uFE0F \u062A\u0648\u0632\u064A\u0639 \u0631\u0627\u0626\u0639 \u0644\u0644\u0623\u062F\u0648\u0627\u0631! (10+ \u0646\u0642\u0627\u0637 \u0625\u0636\u0627\u0641\u064A\u0629) \u2B50"), /* @__PURE__ */ React.createElement("p", { className: "text-xs sm:text-sm font-bold text-emerald-900 leading-relaxed" }, "\u0646\u062C\u062D\u062A\u0645 \u0645\u0639\u0627\u064B \u0641\u064A \u062A\u0646\u0638\u064A\u0645 \u0648\u062A\u0648\u0632\u064A\u0639 \u0627\u0644\u0645\u0647\u0627\u0645 \u0628\u062F\u0642\u0629 \u062F\u0627\u062E\u0644 \u062E\u0644\u064A\u0629 \u0627\u0644\u0646\u062D\u0644. \u062A\u0630\u0643\u0631 \u062F\u0627\u0626\u0645\u0627\u064B \u0623\u0646 \u0627\u0644\u0623\u0633\u0631\u0629 \u0627\u0644\u0633\u0639\u064A\u062F\u0629 \u0648\u0627\u0644\u0645\u062F\u0631\u0633\u0629 \u0627\u0644\u0646\u0627\u062C\u062D\u0629 \u062A\u062D\u062A\u0627\u062C \u0644\u0645\u0634\u0627\u0631\u0643\u0629 \u0627\u0644\u062C\u0645\u064A\u0639 \u0628\u0627\u0644\u0645\u0633\u0624\u0648\u0644\u064A\u0629 \u0645\u062B\u0644 \u0627\u0644\u062E\u0644\u064A\u0629 \u062A\u0645\u0627\u0645\u0627\u064B!")), /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-3 justify-end pt-4" }, /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: resetGame2,
+          className: "bee-button px-5 py-3 rounded-full border-2 border-amber-300 text-amber-950 font-black text-xs sm:text-sm hover:bg-amber-100 active:scale-95 transition-all"
+        },
+        "\u{1F504} \u0625\u0639\u0627\u062F\u0629 \u062A\u0639\u064A\u064A\u0646 \u0627\u0644\u0648\u0638\u0627\u0626\u0641"
+      ), game2Completed && /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => {
+            triggerSound("click");
+            setCurrentStep("game3");
+          },
+          className: "px-8 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs sm:text-sm shadow-md active:scale-95 transition-all border-b-4 border-emerald-700"
+        },
+        "\u0645\u0648\u0627\u0635\u0644\u0629 \u0631\u062D\u0644\u0629 \u0627\u0644\u0627\u0633\u062A\u0642\u0635\u0627\u0621 \u0648\u0627\u0644\u062A\u0623\u0645\u0644 \u27A1\uFE0F"
+      ))), /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-4 space-y-4" }, /* @__PURE__ */ React.createElement("div", { className: "bg-amber-50 rounded-[2rem] p-5 sm:p-6 border-2 border-amber-200 space-y-4 shadow-sm" }, /* @__PURE__ */ React.createElement("h4", { className: "font-black text-amber-950 flex items-center gap-2 text-base" }, /* @__PURE__ */ React.createElement("span", null, "\u{1F4A1}"), " \u062D\u0648\u0627\u0631 \u0648\u0644\u064A \u0627\u0644\u0623\u0645\u0631 \u0641\u064A \u0647\u0630\u0647 \u0627\u0644\u0645\u0631\u062D\u0644\u0629:"), /* @__PURE__ */ React.createElement("ul", { className: "text-xs sm:text-sm text-amber-900 space-y-3 leading-relaxed list-disc list-inside font-bold" }, /* @__PURE__ */ React.createElement("li", null, "\u0633\u0627\u0639\u062F \u0637\u0641\u0644\u0643 \u0641\u064A \u0631\u0628\u0637 \u0641\u0643\u0631\u0629 \u0627\u0644\u0645\u0633\u0624\u0648\u0644\u064A\u0629 \u0627\u0644\u0641\u0631\u062F\u064A\u0629 \u0628\u0627\u0644\u0645\u0647\u0627\u0645 \u0627\u0644\u062A\u064A \u0646\u0642\u0648\u0645 \u0628\u0647\u0627 \u0645\u0639\u0627\u064B \u0628\u0627\u0644\u0645\u0646\u0632\u0644."), /* @__PURE__ */ React.createElement("li", null, "\u0627\u0633\u0623\u0644\u0647 \u0628\u0648\u062F \u0648\u062D\u0646\u0627\u0646: ", /* @__PURE__ */ React.createElement("span", { className: "text-[#EA580C]" }, '"\u0645\u0627 \u0647\u064A \u0627\u0644\u0645\u0633\u0624\u0648\u0644\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629 \u0627\u0644\u0645\u0641\u0636\u0644\u0629 \u0644\u062F\u064A\u0643 \u0648\u0627\u0644\u062A\u064A \u062A\u062D\u0628 \u0623\u0646 \u062A\u0628\u0627\u062F\u0631 \u0628\u0627\u0644\u0642\u064A\u0627\u0645 \u0628\u0647\u0627 \u0644\u062A\u0633\u0627\u0639\u062F \u0639\u0627\u0626\u0644\u062A\u0646\u0627\u061F"'))), /* @__PURE__ */ React.createElement("div", { className: "bg-white/90 p-3.5 rounded-2xl text-[11px] sm:text-xs font-black text-amber-950 border border-amber-100" }, "\u{1F4A1} ", /* @__PURE__ */ React.createElement("span", { className: "font-black text-amber-600" }, "\u0645\u0641\u0647\u0648\u0645 \u0627\u0644\u062A\u0631\u0627\u0628\u0637:"), " \u0639\u0646\u062F\u0645\u0627 \u064A\u0644\u062A\u0632\u0645 \u0643\u0644 \u0639\u0636\u0648 \u0628\u0645\u0633\u0624\u0648\u0644\u064A\u062A\u0647 \u0627\u0644\u0635\u063A\u064A\u0631\u0629\u060C \u062A\u062D\u0644\u0642 \u0627\u0644\u0639\u0627\u0626\u0644\u0629 \u0628\u0623\u0643\u0645\u0644\u0647\u0627 \u0641\u064A \u0633\u0645\u0627\u0621 \u0627\u0644\u0646\u062C\u0627\u062D \u0648\u0627\u0644\u0631\u0627\u062D\u0629."))))), currentStep === "game3" && /* @__PURE__ */ React.createElement("div", { className: "space-y-6" }, /* @__PURE__ */ React.createElement("div", { className: "bg-white rounded-3xl p-4 shadow-md border-2 border-amber-100 flex flex-wrap gap-4 items-center justify-between" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("span", { className: "text-xs font-black text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200" }, "\u0627\u0644\u0645\u0631\u062D\u0644\u0629 \u0627\u0644\u062B\u0627\u0644\u062B\u0629 \u0645\u0646 3"), /* @__PURE__ */ React.createElement("h3", { className: "text-lg sm:text-xl font-black text-amber-950 mt-1" }, "\u062C\u0644\u0633\u0629 \u062D\u0648\u0627\u0631\u064A\u0629 \u0648\u062A\u0623\u0645\u0644\u0627\u062A \u062A\u0631\u0628\u0648\u064A\u0629 \u0634\u064A\u0642\u0629 (PYP) \u{1F331}")), /* @__PURE__ */ React.createElement("div", { className: "flex gap-2" }, /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-3.5 rounded-full bg-amber-200" }), /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-3.5 rounded-full bg-amber-200" }), /* @__PURE__ */ React.createElement("span", { className: "h-3.5 w-10 rounded-full bg-amber-500 animate-pulse" }))), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-6" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-8 bg-white rounded-[2rem] p-5 sm:p-7 shadow-xl border-2 border-amber-300 space-y-6" }, /* @__PURE__ */ React.createElement("div", { className: "w-full bg-amber-100 h-3 rounded-full overflow-hidden shadow-inner" }, /* @__PURE__ */ React.createElement(
+        "div",
+        {
+          className: "bg-amber-500 h-full transition-all duration-300",
+          style: { width: `${(reflectionIndex + 1) / REFLECTION_PROMPTS.length * 100}%` }
+        }
+      )), /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between" }, /* @__PURE__ */ React.createElement("span", { className: "text-xs font-black text-amber-950 bg-amber-100 px-4 py-1.5 rounded-full border border-amber-200" }, "\u0627\u0644\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u062A\u0623\u0645\u0644\u064A\u0629 ", reflectionIndex + 1, " \u0645\u0646 ", REFLECTION_PROMPTS.length), /* @__PURE__ */ React.createElement("span", { className: "text-xs sm:text-sm font-black text-amber-900 bg-yellow-100 px-3 py-1.5 rounded-full" }, "\u2B50 \u0646\u062C\u0648\u0645 \u0627\u0644\u062A\u0623\u0645\u0644 \u0627\u0644\u0645\u062D\u0635\u0648\u062F\u0629: ", reflectionStars)), /* @__PURE__ */ React.createElement("div", { className: "space-y-3 bg-gradient-to-l from-amber-50/50 to-amber-100/30 p-5 sm:p-6 rounded-2xl border border-amber-200 shadow-sm" }, /* @__PURE__ */ React.createElement("h4", { className: "text-sm font-black text-amber-700 bg-white px-3 py-1 rounded-full inline-block" }, currentPrompt.title), /* @__PURE__ */ React.createElement("p", { className: "text-lg sm:text-xl font-black text-amber-950 leading-relaxed" }, currentPrompt.q)), /* @__PURE__ */ React.createElement("div", { className: "space-y-3" }, currentOptions.map((option, index) => {
+        const isSelected = selectedAnswer === option;
+        const isCorrect = option === currentPrompt.correct;
+        let btnClass = "bg-white border-amber-200 hover:border-amber-400 hover:bg-amber-50/40 text-amber-950";
+        if (showAnswerFeedback) {
+          if (isCorrect) {
+            btnClass = "bg-emerald-100 border-emerald-500 text-emerald-950 ring-2 ring-emerald-300";
+          } else if (isSelected) {
+            btnClass = "bg-rose-100 border-rose-400 text-rose-950";
+          } else {
+            btnClass = "bg-white border-amber-100 opacity-60 text-amber-900";
+          }
+        }
+        return /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            key: index,
+            onClick: () => handleAnswerSelection(option),
+            disabled: showAnswerFeedback,
+            className: `w-full text-right p-4 rounded-2xl border-2 font-black text-sm sm:text-base transition-all duration-200 flex items-center justify-between ${btnClass}`
+          },
+          /* @__PURE__ */ React.createElement("span", null, option),
+          showAnswerFeedback && isCorrect && /* @__PURE__ */ React.createElement("span", { className: "text-emerald-700 font-black text-xs sm:text-sm" }, "\u2713 \u0625\u062C\u0627\u0628\u0629 \u0645\u0645\u062A\u0627\u0632\u0629"),
+          showAnswerFeedback && isSelected && !isCorrect && /* @__PURE__ */ React.createElement("span", { className: "text-rose-600 font-black text-xs sm:text-sm" }, "\u2717 \u062D\u0627\u0648\u0644 \u0645\u062C\u062F\u062F\u0627\u064B")
+        );
+      })), showAnswerFeedback && /* @__PURE__ */ React.createElement("div", { className: "bg-amber-50 p-5 rounded-2xl border border-amber-200 space-y-3 transition-opacity" }, /* @__PURE__ */ React.createElement("p", { className: `font-black text-base sm:text-lg ${selectedAnswer === currentPrompt.correct ? "text-emerald-800" : "text-amber-950"}` }, selectedAnswer === currentPrompt.correct ? " \u0623\u062D\u0633\u0646\u062A\u0645 \u0639\u0645\u0644\u0627\u064B! \u0627\u062E\u062A\u064A\u0627\u0631 \u0635\u062D\u064A\u062D \u0648\u0630\u0643\u0627\u0621 \u0627\u0633\u062A\u062B\u0646\u0627\u0626\u064A \u064A\u062F\u0644 \u0639\u0644\u0649 \u0627\u0644\u062A\u0641\u0643\u064A\u0631 \u0627\u0644\u062A\u0631\u0628\u0648\u064A \u0627\u0644\u0628\u062F\u064A\u0639." : "\u{1F4A1} \u0627\u0642\u062A\u0631\u0628\u062A\u0645 \u0645\u0646 \u0627\u0644\u062D\u0644! \u0641\u0643\u0631\u0648\u0627 \u0641\u064A \u0627\u0644\u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u0622\u062E\u0631 \u0644\u0645\u0637\u0627\u0628\u0642\u0629 \u0645\u0628\u0627\u062F\u0626 \u0627\u0644\u0646\u062D\u0644 \u0627\u0644\u0633\u0644\u064A\u0645\u0629."), /* @__PURE__ */ React.createElement("div", { className: "border-t border-amber-200 pt-3" }, /* @__PURE__ */ React.createElement("h5", { className: "font-black text-amber-950 text-xs sm:text-sm flex items-center gap-1.5 mb-1 bg-white px-3 py-1 rounded-full inline-block" }, /* @__PURE__ */ React.createElement("span", null, "\u{1F4AC}"), " \u0625\u0631\u0634\u0627\u062F \u0644\u0644\u0645\u0646\u0627\u0642\u0634\u0629 \u0627\u0644\u0639\u0627\u0626\u0644\u064A\u0629 \u0627\u0644\u0622\u0646:"), /* @__PURE__ */ React.createElement("p", { className: "text-xs sm:text-sm text-amber-900 leading-relaxed italic font-bold" }, '"', currentPrompt.parentTip, '"'))), /* @__PURE__ */ React.createElement("div", { className: "flex justify-end pt-2" }, showAnswerFeedback && /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: handleNextReflection,
+          className: "bee-button bg-amber-500 hover:bg-amber-600 text-white font-black text-sm sm:text-base px-8 py-3.5 rounded-full shadow-md active:scale-95 transition-all border-b-4 border-amber-700"
+        },
+        reflectionIndex < REFLECTION_PROMPTS.length - 1 ? "\u0627\u0646\u062A\u0642\u0644 \u0644\u0644\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u062A\u0627\u0644\u064A\u0629 \u27A1\uFE0F" : "\u0627\u0643\u062A\u0634\u0641 \u0627\u0644\u0646\u062A\u064A\u062C\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064A\u0629 \u0648\u0627\u0644\u0645\u064A\u062B\u0627\u0642 \u{1F389}"
+      ))), /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-4 space-y-4" }, /* @__PURE__ */ React.createElement("div", { className: "bg-amber-50 rounded-[2rem] p-5 sm:p-6 border-2 border-amber-200 space-y-4 shadow-sm" }, /* @__PURE__ */ React.createElement("h4", { className: "font-black text-amber-950 flex items-center gap-2 text-base" }, /* @__PURE__ */ React.createElement("span", null, "\u{1F4A1}"), " \u062D\u0648\u0627\u0631 \u0648\u0644\u064A \u0627\u0644\u0623\u0645\u0631 \u0641\u064A \u0647\u0630\u0647 \u0627\u0644\u0645\u0631\u062D\u0644\u0629:"), /* @__PURE__ */ React.createElement("ul", { className: "text-xs sm:text-sm text-amber-900 space-y-3 leading-relaxed list-disc list-inside font-bold" }, /* @__PURE__ */ React.createElement("li", null, "\u0627\u0642\u0631\u0623 \u0627\u0644\u0623\u0633\u0626\u0644\u0629 \u0644\u0637\u0641\u0644\u0643 \u0628\u0635\u0648\u062A \u0645\u0628\u0647\u062C \u0648\u0627\u0645\u0646\u062D\u0647 \u062F\u0642\u064A\u0642\u0629 \u062F\u0627\u0641\u0626\u0629 \u0644\u0644\u062A\u0641\u0643\u064A\u0631 \u0642\u0628\u0644 \u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u0625\u062C\u0627\u0628\u0629."), /* @__PURE__ */ React.createElement("li", null, "\u0644\u064A\u0633 \u0627\u0644\u0647\u062F\u0641 \u0647\u0648 \u0645\u062C\u0631\u062F \u0627\u0644\u0636\u063A\u0637 \u0639\u0644\u0649 \u0627\u0644\u062E\u064A\u0627\u0631 \u0627\u0644\u0635\u062D\u064A\u062D \u0628\u0644 \u0627\u0644\u0627\u0633\u062A\u0645\u0627\u0639 \u0644\u062D\u0648\u0627\u0631 \u0648\u0646\u0642\u0627\u0634 \u0637\u0641\u0644\u0643 \u0627\u0644\u0648\u062F\u0648\u062F \u0645\u0639\u0643.")), /* @__PURE__ */ React.createElement("div", { className: "bg-white/90 p-3.5 rounded-2xl text-[11px] sm:text-xs font-black text-amber-950 border border-amber-100" }, "\u{1F4A1} ", /* @__PURE__ */ React.createElement("span", { className: "font-black text-amber-600" }, "\u0645\u0641\u0647\u0648\u0645 \u0627\u0644\u062A\u0641\u0643\u064A\u0631 \u0648\u0627\u0644\u062A\u0623\u0645\u0644:"), " \u064A\u0639\u0645\u0642 \u0627\u0644\u0637\u0627\u0644\u0628 \u0627\u0633\u062A\u064A\u0639\u0627\u0628\u0647 \u0639\u0646\u062F\u0645\u0627 \u064A\u0631\u0628\u0637 \u0628\u064A\u0646 \u062A\u0635\u0631\u0641\u0627\u062A\u0647 \u0627\u0644\u064A\u0648\u0645\u064A\u0629 \u0648\u0627\u0644\u062F\u0631\u0648\u0633 \u0627\u0644\u0645\u0633\u062A\u0648\u062D\u0627\u0629 \u0645\u0646 \u0627\u0644\u0637\u0628\u064A\u0639\u0629."))))), currentStep === "celebrate" && /* @__PURE__ */ React.createElement("div", { className: "max-w-3xl mx-auto bg-white rounded-[3rem] shadow-2xl border-8 border-yellow-400 overflow-hidden text-center relative p-6 sm:p-12 space-y-8" }, /* @__PURE__ */ React.createElement("div", { className: "absolute top-0 left-0 right-0 h-4 bg-gradient-to-r from-red-400 via-amber-400 to-emerald-400 animate-pulse" }), /* @__PURE__ */ React.createElement("div", { className: "space-y-4" }, /* @__PURE__ */ React.createElement("span", { className: "text-6xl sm:text-8xl block animate-bounce" }, "\u{1F3C6}"), /* @__PURE__ */ React.createElement("h2", { className: "text-3xl sm:text-5xl font-black text-amber-950 leading-tight" }, "\u062A\u0647\u0627\u0646\u064A\u0646\u0627 \u064A\u0627 \u0623\u0628\u0637\u0627\u0644 \u0627\u0644\u062E\u0644\u064A\u0629 \u0627\u0644\u0645\u0628\u062F\u0639\u064A\u0646! \u{1F36F}"), /* @__PURE__ */ React.createElement("p", { className: "text-sm sm:text-lg text-amber-900 font-bold max-w-xl mx-auto" }, "\u0644\u0642\u062F \u0627\u062C\u062A\u0632\u062A\u0645 \u0643\u0627\u0641\u0629 \u0645\u0631\u0627\u062D\u0644 \u0627\u0644\u0627\u0633\u062A\u0643\u0634\u0627\u0641 \u0648\u0627\u0644\u0627\u0633\u062A\u0642\u0635\u0627\u0621 \u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0646\u062D\u0644 \u0628\u0646\u062C\u0627\u062D \u0631\u0627\u0626\u0639\u060C \u0648\u0623\u0638\u0647\u0631\u062A\u0645 \u0645\u0647\u0627\u0631\u0627\u062A \u0645\u0630\u0647\u0644\u0629 \u0641\u064A \u0627\u0644\u062A\u0639\u0627\u0648\u0646 \u0648\u0627\u0644\u062A\u0641\u0643\u064A\u0631 \u0648\u0627\u0644\u0645\u0633\u0624\u0648\u0644\u064A\u0629 \u0627\u0644\u0645\u0634\u062A\u0631\u0643\u0629!")), /* @__PURE__ */ React.createElement("div", { className: "bg-amber-50 border-2 border-amber-300 rounded-[2rem] p-6 max-w-md mx-auto grid grid-cols-2 gap-4 shadow-inner" }, /* @__PURE__ */ React.createElement("div", { className: "text-center border-l-2 border-amber-200" }, /* @__PURE__ */ React.createElement("span", { className: "block text-xs font-black text-amber-800" }, "\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0646\u0642\u0627\u0637"), /* @__PURE__ */ React.createElement("span", { className: "block text-2xl sm:text-3xl font-black text-amber-950 mt-1" }, score, " \u2B50")), /* @__PURE__ */ React.createElement("div", { className: "text-center" }, /* @__PURE__ */ React.createElement("span", { className: "block text-xs font-black text-amber-800" }, "\u0646\u062C\u0648\u0645 \u0627\u0644\u062A\u0623\u0645\u0644 \u0627\u0644\u0645\u0643\u062A\u0633\u0628\u0629"), /* @__PURE__ */ React.createElement("span", { className: "block text-2xl sm:text-3xl font-black text-amber-950 mt-1" }, reflectionStars, " / 5 \u{1F31F}"))), /* @__PURE__ */ React.createElement("div", { className: "border-4 border-dashed border-yellow-400 rounded-[2rem] p-5 sm:p-7 bg-yellow-50/50 max-w-xl mx-auto space-y-4 text-right shadow-sm" }, /* @__PURE__ */ React.createElement("h4", { className: "text-center text-lg sm:text-xl font-black text-amber-950 border-b-2 border-amber-200 pb-2" }, "\u{1F4DC} \u0645\u064A\u062B\u0627\u0642 \u0627\u0644\u0646\u062D\u0644\u0629 \u0627\u0644\u0645\u0628\u0627\u062F\u0631\u0629 \u0648\u0627\u0644\u0645\u0633\u0624\u0648\u0644\u0629"), /* @__PURE__ */ React.createElement("p", { className: "text-xs sm:text-sm text-amber-950 leading-relaxed font-black" }, "\u0628\u0645\u0634\u0627\u0631\u0643\u0629 \u0648\u0644\u064A \u0623\u0645\u0631\u064A\u060C \u0623\u062A\u0639\u0647\u062F \u0628\u0623\u0646 \u0623\u0643\u0648\u0646 \u0643\u0627\u0644\u0646\u062D\u0644\u0629 \u0627\u0644\u0643\u0627\u062F\u062D\u0629 \u0648\u0627\u0644\u0645\u062D\u0628\u0629 \u0644\u0632\u0645\u064A\u0644\u0627\u062A\u0647\u0627: ", /* @__PURE__ */ React.createElement("br", null), "\u{1F331} \u0623\u0634\u0627\u0631\u0643 \u0628\u0646\u0634\u0627\u0637 \u0641\u064A \u0627\u0644\u062D\u0641\u0627\u0638 \u0639\u0644\u0649 ", /* @__PURE__ */ React.createElement("span", { className: "text-amber-600" }, "\u0627\u0644\u0646\u0638\u0627\u0645 \u0648\u0627\u0644\u062A\u0631\u062A\u064A\u0628"), " \u0641\u064A \u0645\u0646\u0632\u0644\u064A \u0648\u0645\u062F\u0631\u0633\u062A\u064A. ", /* @__PURE__ */ React.createElement("br", null), "\u{1F91D} \u0623\u062A\u0639\u0627\u0648\u0646 \u0645\u0639 \u0632\u0645\u0644\u0627\u0626\u064A \u0641\u064A \u0627\u0644\u0641\u0631\u064A\u0642 \u0648\u0623\u0639\u0636\u0627\u0621 \u0639\u0627\u0626\u0644\u062A\u064A ", /* @__PURE__ */ React.createElement("span", { className: "text-amber-600" }, "\u0628\u0631\u0648\u062D \u0625\u064A\u062C\u0627\u0628\u064A\u0629"), " \u0639\u0627\u0644\u064A\u0629. ", /* @__PURE__ */ React.createElement("br", null), "\u{1F9E0} \u0623\u0641\u0643\u0631 \u0628\u0630\u0643\u0627\u0621 \u0648\u0623\u0634\u0627\u0631\u0643 \u062F\u0627\u0626\u0645\u0627\u064B \u0644\u062A\u0631\u0643 ", /* @__PURE__ */ React.createElement("span", { className: "text-amber-600" }, "\u0623\u062B\u0631 \u0648\u0645\u0628\u0627\u062F\u0631\u0629 \u0645\u0641\u064A\u062F\u0629"), " \u0641\u064A \u0628\u064A\u0626\u062A\u064A \u0648\u0645\u062C\u062A\u0645\u0639\u064A.")), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col sm:flex-row gap-4 justify-center pt-4" }, /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: resetWholeAdventure,
+          className: "bee-button bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black text-base sm:text-lg px-8 py-4 rounded-full shadow-lg transition-all border-b-4 border-amber-700"
+        },
+        "\u{1F504} \u0627\u0644\u0639\u0628 \u0645\u062C\u062F\u062F\u0627\u064B \u0645\u0639 \u0639\u0627\u0626\u0644\u062A\u064A"
+      )))),
+      /* @__PURE__ */ React.createElement("footer", { className: "mt-12 text-center text-[11px] sm:text-xs text-amber-950 border-t-2 border-amber-200/50 pt-6 max-w-6xl mx-auto px-4 space-y-1" }, /* @__PURE__ */ React.createElement("p", { className: "font-bold" }, "\u062A\u0637\u0628\u064A\u0642 \u062F\u0627\u0639\u0645 \u0644\u0645\u0646\u0647\u062C \u0627\u0644\u0644\u063A\u0629 \u0627\u0644\u0639\u0631\u0628\u064A\u0629 - \u0627\u0644\u0628\u0643\u0627\u0644\u0648\u0631\u064A\u0627 \u0627\u0644\u062F\u0648\u0644\u064A\u0629 (PYP) \u2014 \u0645\u0647\u0627\u0631\u0627\u062A \u062A\u0646\u0638\u064A\u0645 \u0627\u0644\u0630\u0627\u062A \u0648\u0627\u0644\u062A\u0641\u0643\u064A\u0631 \u0627\u0644\u0627\u0633\u062A\u0642\u0635\u0627\u0626\u064A"), /* @__PURE__ */ React.createElement("p", { className: "font-black text-amber-800" }, "\u0627\u0644\u0645\u062F\u0631\u0633\u0629 \u0627\u0644\u0631\u0642\u0645\u064A\u0629 \u2014 \u0625\u0639\u062F\u0627\u062F \u0627\u0644\u0623\u0633\u062A\u0627\u0630\u0629 \u0631\u0627\u0644\u0647 \u0639\u0642\u0627\u062F \u{1F49B}"))
+    );
+  }
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(React.createElement(App));
+})();
+
+  </script>
+</body>
+</html>
